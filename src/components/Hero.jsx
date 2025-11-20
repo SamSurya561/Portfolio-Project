@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { db } from '../firebase.js';
 import { doc, onSnapshot } from "firebase/firestore";
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 
 const Hero = () => {
   const [text, setText] = useState('');
@@ -63,12 +64,12 @@ const Hero = () => {
               <p>With 2+ years of experience in web development, I bring ideas to life through clean code and thoughtful design.</p>
             </div>
             <div className="info-p2">
-              <p><i className="fa-solid fa-location-dot"></i> Based in Chennai, Tamilnadu, India.</p>
-              <p><i className="fa-solid fa-envelope"></i> Email : sharmilasharmi2128@gmail.com</p>
+              <p><i className="fa-solid fa-location-dot"></i> <h4>Based in : </h4>Chennai, Tamilnadu, India.</p>
+              <p><i className="fa-solid fa-envelope"></i> <h4>Email : </h4>sharmilasharmi2128@gmail.com</p>
             </div>
 
             <div className="btnn">
-              <button className="btn-home1"><i className="fa-solid fa-arrow-right"></i> Hire Me</button>
+              <button className="btn-home1"><i className="fa-solid fa-arrow-right"></i> Contact</button>
               <a 
                 href={cvUrl || '#'} 
                 target="_blank" 
@@ -86,10 +87,9 @@ const Hero = () => {
             <div className="follow">
               <p className="followw">Follow me:</p>
               <ul>
-                <li><a href="#" aria-label="GitHub"><i className="fa-brands fa-github"></i></a></li>
-                <li><a href="#" aria-label="Discord"><i className="fa-brands fa-discord"></i></a></li>
-                <li><a href="#" aria-label="LinkedIn"><i className="fa-brands fa-linkedin"></i></a></li>
-                <li><a href="#" aria-label="Instagram"><i className="fa-brands fa-instagram"></i></a></li>
+                
+                <li><a href="http://www.linkedin.com/in/sharmila-sharmi" aria-label="LinkedIn"><i className="fa-brands fa-linkedin"></i></a></li>
+                <li><a href="https://www.instagram.com/sharms__21/" aria-label="Instagram"><i className="fa-brands fa-instagram"></i></a></li>
               </ul>
             </div>
           </div>

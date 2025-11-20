@@ -20,12 +20,18 @@ const About = () => {
 
   return (
     <section className="about reveal" id="about">
-      <p className="about-label"><h1>ABOUT ME</h1></p>
-      <div className="title">
-        <p><h2>Building Meaningful Digital Experiences</h2></p>
-        
+      {/* FIX 1: Removed <p> wrapper around h1. This removes the massive top gap. */}
+      <h1 style={{ marginBottom: '5px' }}>ABOUT ME</h1>
+      
+      {/* FIX 2: Added inline style to override the global 'padding-bottom: 30px' for this specific subtitle */}
+      <p style={{ paddingBottom: '15px', color: 'gray', fontWeight: '500' }}>
+        Building Meaningful Digital Experiences
+      </p>
+      
+      {/* FIX 3: Reduced padding-bottom from 40px to 30px on the line container */}
+      <div className="hrrr" style={{ width: '100%', paddingBottom: '30px' }}>
+        <hr style={{ width: '10%', margin: '0' }} />
       </div>
-      <div className="hrrr"><hr /></div>
 
       <div className="about-container">
         <div className="info-about">

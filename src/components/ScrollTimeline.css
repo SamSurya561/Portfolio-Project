@@ -1,0 +1,220 @@
+/* Wrapper */
+.timeline-wrapper {
+  position: relative;
+  width: 100%;
+  padding: 4rem 0;
+  overflow: hidden;
+}
+
+.timeline-header {
+  text-align: center;
+  margin-bottom: 5rem;
+}
+
+.timeline-title {
+  font-size: 2.5rem;
+  font-weight: 700;
+  margin-bottom: 1rem;
+  font-family: "Playfair Display", serif;
+  color: var(--text);
+}
+
+.timeline-subtitle {
+  font-size: 1.1rem;
+  color: var(--text-lighter);
+}
+
+/* Layout Container */
+.timeline-content-area {
+  position: relative;
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: 0 20px;
+}
+
+/* --- THE BEAM LINES --- */
+
+/* 1. Background Gray Line */
+.timeline-line-bg {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  width: 2px;
+  background-color: rgba(200, 200, 200, 0.2);
+  z-index: 1;
+}
+
+/* 2. Active Glowing Line */
+.timeline-line-active {
+  position: absolute;
+  top: 0;
+  width: 2px;
+  background: linear-gradient(to bottom, #474af0, #a855f7);
+  z-index: 2;
+  box-shadow: 0 0 15px rgba(71, 74, 240, 0.5);
+}
+
+/* 3. The Glowing Head/Tip */
+.timeline-beam-head {
+  position: absolute;
+  bottom: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 12px;
+  height: 12px;
+  background: #a855f7;
+  border-radius: 50%;
+  box-shadow: 0 0 20px 5px rgba(168, 85, 247, 0.6);
+  z-index: 3;
+}
+
+/* --- CARDS & ROW --- */
+
+.timeline-row {
+  display: flex;
+  align-items: center;
+  margin-bottom: 6rem; /* Space between events */
+  position: relative;
+  z-index: 10;
+}
+
+.timeline-card {
+  flex: 1;
+  background: var(--card-bg);
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  padding: 2rem;
+  box-shadow: var(--shadow);
+  transition: all 0.3s ease;
+  position: relative;
+}
+
+.timeline-card:hover {
+  transform: translateY(-5px);
+  box-shadow: var(--shadow-hover);
+  border-color: var(--accent);
+}
+
+.card-date {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: var(--text-lighter);
+  margin-bottom: 12px;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.card-title {
+  font-size: 1.5rem;
+  font-weight: 700;
+  margin-bottom: 5px;
+  color: var(--text);
+}
+
+.card-subtitle {
+  font-size: 1rem;
+  font-weight: 500;
+  color: var(--accent); /* Highlight company/school name */
+  margin-bottom: 15px;
+}
+
+.card-description {
+  font-size: 0.95rem;
+  color: var(--text-lighter);
+  line-height: 1.7;
+}
+
+/* The Circle Dot on the Line */
+.timeline-dot {
+  position: absolute;
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  background: var(--bg);
+  border: 3px solid #ccc;
+  z-index: 4;
+  transition: all 0.4s ease;
+}
+
+.timeline-dot.active {
+  background: #fff;
+  border-color: #474af0;
+  box-shadow: 0 0 0 4px rgba(71, 74, 240, 0.2);
+  transform: scale(1.2);
+}
+
+/* Spacer for grid layout */
+.timeline-spacer {
+  flex: 1;
+}
+
+/* --- RESPONSIVE LAYOUT --- */
+
+/* Desktop (Alternating) */
+@media (min-width: 769px) {
+  .timeline-line-bg, .timeline-line-active {
+    left: 50%;
+    transform: translateX(-50%);
+  }
+  
+  .timeline-dot {
+    left: 50%;
+    transform: translateX(-50%);
+  }
+
+  /* Odd Items: Card Left, Spacer Right */
+  .timeline-row:nth-child(odd) {
+    flex-direction: row;
+  }
+  .timeline-row:nth-child(odd) .timeline-card {
+    margin-right: 50px;
+    text-align: right;
+  }
+  .timeline-row:nth-child(odd) .card-date {
+    justify-content: flex-end; /* Align date icon to text */
+    flex-direction: row-reverse; 
+  }
+
+  /* Even Items: Spacer Left, Card Right */
+  .timeline-row:nth-child(even) {
+    flex-direction: row-reverse;
+  }
+  .timeline-row:nth-child(even) .timeline-card {
+    margin-left: 50px;
+    text-align: left;
+  }
+}
+
+/* Mobile (Stacked) */
+@media (max-width: 768px) {
+  .timeline-line-bg, .timeline-line-active {
+    left: 20px;
+  }
+  
+  .timeline-dot {
+    left: 20px;
+    transform: translateX(-50%);
+  }
+  .timeline-dot.active {
+    transform: translateX(-50%) scale(1.2);
+  }
+
+  .timeline-row {
+    flex-direction: column;
+    align-items: flex-start;
+    margin-bottom: 4rem;
+  }
+  
+  .timeline-spacer {
+    display: none;
+  }
+  
+  .timeline-card {
+    width: 100%;
+    margin-left: 50px; /* Make space for the line */
+    text-align: left;
+  }
+}

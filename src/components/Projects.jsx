@@ -25,15 +25,16 @@ const Projects = () => {
   }, []);
 
   return (
-    <section className="project reveal" id="project">
-      <p className="section-label">FEATURED WORK</p>
-      <h1 className="section-title">Projects</h1>
-      <div className="underline"></div>
-
-      <div className="info-pro">
-       
-      </div>
-
+    // FIX 1: Reduced padding via inline style to close gap with previous section
+    <section className="project reveal" id="project" style={{ padding: '60px 20px' }}>
+      
+      {/* FIX 2: Tighter margins for label and title */}
+      <p className="section-label" style={{ marginBottom: '10px' }}>FEATURED WORK</p>
+      <h1 className="section-title" style={{ marginBottom: '10px' }}>Projects</h1>
+      
+      {/* FIX 3: Reduced bottom margin from 50px to 30px to bring cards closer */}
+      <div className="underline" style={{ margin: '0 auto 30px auto' }}></div>
+      
       <div className="projects-container">
         {loading && <p className="__fb_muted" style={{textAlign:'center', width:'100%'}}>Loading projects...</p>}
         
