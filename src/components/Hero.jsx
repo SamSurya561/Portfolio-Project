@@ -90,6 +90,7 @@ const Hero = () => {
                 
                 <li><a href="http://www.linkedin.com/in/sharmila-sharmi" aria-label="LinkedIn"><i className="fa-brands fa-linkedin"></i></a></li>
                 <li><a href="https://www.instagram.com/sharms__21/" aria-label="Instagram"><i className="fa-brands fa-instagram"></i></a></li>
+                <a href="https://wa.me/213554139526" target="_blank" rel="noopener noreferrer" aria-label="WhatsApp"><i className="fa-brands fa-whatsapp"></i></a>
               </ul>
             </div>
           </div>
