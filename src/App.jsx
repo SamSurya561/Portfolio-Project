@@ -13,6 +13,7 @@ import Footer from './components/Footer';
 import AllProjects from './components/AllProjects';
 import ScrollManager from './components/ScrollManager';
 
+
 // ScrollHandler to manage scroll behavior
 const ScrollHandler = () => {
   const location = useLocation();
@@ -62,10 +63,10 @@ function App() {
     <>
       {/* Loader */}
       {loading && <Loader onLoaded={() => setLoading(false)} />}
-      
+
       <Router>
         <ScrollManager />
-        
+
         {/* FIX: Navbar is now outside the animated main-page div */}
         {/* We show it only when loading is finished so it fades in nicely */}
         {!loading && <Navbar />}
@@ -77,6 +78,9 @@ function App() {
             <Route path="/all-projects" element={<AllProjects />} />
           </Routes>
         </div>
+
+        {/* Rating Popup - Shows on all pages */}
+        {!loading}
       </Router>
     </>
   );

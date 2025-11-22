@@ -1,0 +1,206 @@
+/* Rating Popup Container */
+.rating-popup {
+    position: fixed;
+    bottom: 100px;
+    right: 20px;
+    background: rgba(255, 255, 255, 0.95);
+    border-radius: 10px;
+    padding: 10px 14px;
+    box-shadow: 0 3px 12px rgba(0, 0, 0, 0.12);
+    backdrop-filter: blur(10px);
+    z-index: 999;
+    transition: all 0.3s ease;
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    max-width: 240px;
+}
+
+.rating-popup.hidden {
+    display: none;
+}
+
+html.dark .rating-popup {
+    background: rgba(31, 41, 55, 0.95);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.rating-popup.minimized {
+    padding: 8px 14px;
+}
+
+.rating-popup-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 8px;
+}
+
+.rating-popup.minimized .rating-popup-header {
+    margin-bottom: 0;
+}
+
+.rating-popup-header h3 {
+    margin: 0;
+    font-size: 0.85rem;
+    font-weight: 600;
+    color: #333;
+}
+
+html.dark .rating-popup-header h3 {
+    color: #fff;
+}
+
+.minimize-btn,
+.close-btn {
+    background: none;
+    border: none;
+    font-size: 0.9rem;
+    cursor: pointer;
+    color: #666;
+    padding: 4px;
+    transition: color 0.3s ease;
+}
+
+.minimize-btn:hover,
+.close-btn:hover {
+    color: #ff9e0b;
+}
+
+html.dark .minimize-btn,
+html.dark .close-btn {
+    color: #aaa;
+}
+
+.rating-popup-content {
+    animation: fadeIn 0.3s ease;
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(-10px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* Star Rating Styles */
+.radio {
+    display: flex;
+    justify-content: center;
+    gap: 5px;
+}
+
+.radio>input {
+    position: absolute;
+    appearance: none;
+}
+
+.radio>label {
+    cursor: pointer;
+    font-size: 18px;
+    position: relative;
+    display: inline-block;
+    transition: transform 0.2s ease;
+}
+
+.radio>label>svg {
+    fill: #666;
+    transition: fill 0.2s ease;
+}
+
+html.dark .radio>label>svg {
+    fill: #888;
+}
+
+.radio>label:hover {
+    transform: scale(1.1);
+}
+
+.radio>label:hover>svg {
+    fill: #ff9e0b;
+}
+
+.radio>input:checked+label>svg {
+    fill: #ff9e0b;
+}
+
+.radio>input:checked+label~label>svg,
+.radio>input:checked+label>svg {
+    fill: #ff9e0b;
+}
+
+.radio input:checked~label svg {
+    fill: #ffa723;
+}
+
+/* Footer Rating Section */
+.footer-rating {
+    text-align: center;
+    padding: 30px 20px;
+    background: rgba(0, 0, 0, 0.03);
+    border-top: 1px solid rgba(0, 0, 0, 0.1);
+}
+
+html.dark .footer-rating {
+    background: rgba(255, 255, 255, 0.03);
+    border-top: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.footer-rating h3 {
+    font-size: 1.1rem;
+    margin-bottom: 15px;
+    color: var(--text);
+    font-weight: 600;
+}
+
+.footer-rating .radio {
+    justify-content: center;
+    margin-top: 10px;
+}
+
+.footer-rating .radio>label {
+    font-size: 24px;
+}
+
+/* Mobile Responsive */
+@media (max-width: 768px) {
+    .rating-popup {
+        bottom: 90px;
+        right: 10px;
+        padding: 8px 12px;
+        max-width: 200px;
+    }
+
+    .rating-popup-header h3 {
+        font-size: 0.75rem;
+    }
+
+    .minimize-btn {
+        display: none;
+    }
+
+    .close-btn {
+        display: block;
+    }
+
+    .radio>label {
+        font-size: 16px;
+    }
+
+    .radio {
+        gap: 4px;
+    }
+
+    .footer-rating .radio>label {
+        font-size: 20px;
+    }
+}
+
+@media (min-width: 769px) {
+    .close-btn {
+        display: none;
+    }
+}

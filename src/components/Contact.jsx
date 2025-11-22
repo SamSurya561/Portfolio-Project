@@ -23,15 +23,15 @@ const Contact = () => {
     // Here you would typically send the form data to a service
     // like EmailJS, Formspree, or your own backend.
     console.log("Form data submitted:", formData);
-    
+
     // Simple confirmation without using alert()
     const btn = e.target.querySelector('.btn-send');
     const originalText = btn.textContent;
     btn.textContent = 'Message Sent!';
     btn.style.backgroundColor = '#0b7b49'; // Success color
     setTimeout(() => {
-        btn.textContent = originalText;
-        btn.style.backgroundColor = ''; // Revert to original color
+      btn.textContent = originalText;
+      btn.style.backgroundColor = ''; // Revert to original color
     }, 3000);
 
 
@@ -46,22 +46,22 @@ const Contact = () => {
   return (
     <section className="contact reveal" id="contact">
       <h1>CONTACT</h1>
-      <p><h1>Get in Touch with Us</h1></p>
+      <p><h1>Get in Touch with Me</h1></p>
 
       <div className="contact-content">
         <div className="contact-info">
-          <p>I'm always open to discuss exciting projects and new opportunities. Let's collaborate!</p>
+          <p><h3>I'm always open to discuss exciting projects and new opportunities. Let's collaborate!</h3><br></br></p>
 
           <div className="contact-details">
-            <div className="contact-item"><i className="fa-solid fa-envelope"></i><span>amine@example.com</span></div>
-            <div className="contact-item"><i className="fa-solid fa-phone"></i><span>+213 00 11 22 33 44</span></div>
-            <div className="contact-item"><i className="fa-solid fa-location-dot"></i><span>Algeria, Boumerdes</span></div>
+            <div className="contact-item"><i className="fa-solid fa-envelope"></i><span>Sharmilasharmi2128@gmail.com</span></div>
+            <div className="contact-item"><i className="fa-solid fa-phone"></i><span>+919600176371</span></div>
+            <div className="contact-item"><i className="fa-solid fa-location-dot"></i><span>Chennai, Tamilnadu, India.</span></div>
           </div>
 
           <div className="social-links">
-            <a href="https://github.com/Saboo24" className="social-link" target="_blank" rel="noopener noreferrer" aria-label="GitHub"><i className="fa-brands fa-github"></i></a>
-            <a href="https://www.linkedin.com/in/amine-hamzaoui-a2453a35b" className="social-link" target="_blank" rel="noopener noreferrer" aria-label="LinkedIn"><i className="fa-brands fa-linkedin"></i></a>
-            <a href="https://wa.me/213554139526" className="social-link" target="_blank" rel="noopener noreferrer" aria-label="WhatsApp"><i className="fa-brands fa-whatsapp"></i></a>
+            <a href="https://www.linkedin.com/in/sharmila-sharmi" target="_blank" rel="noopener noreferrer" aria-label="LinkedIn"><i className="fa-brands fa-linkedin"></i></a>
+            <a href="https://www.instagram.com/sharms__21/" aria-label="Instagram"><i className="fa-brands fa-instagram"></i></a>
+            <a href="https://wa.me/919600176371" target="_blank" rel="noopener noreferrer" aria-label="WhatsApp"><i className="fa-brands fa-whatsapp"></i></a>
           </div>
         </div>
 

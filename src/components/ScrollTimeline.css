@@ -1,220 +1,472 @@
 /* Wrapper */
 .timeline-wrapper {
-  position: relative;
-  width: 100%;
-  padding: 4rem 0;
-  overflow: hidden;
+    position: relative;
+    width: 100%;
+    padding: 2rem 0;
+    overflow: hidden;
+    background-color: transparent;
+    /* Ensure it blends with page bg */
 }
 
 .timeline-header {
-  text-align: center;
-  margin-bottom: 5rem;
+    text-align: center;
+    margin-bottom: 2rem;
 }
 
 .timeline-title {
-  font-size: 2.5rem;
-  font-weight: 700;
-  margin-bottom: 1rem;
-  font-family: "Playfair Display", serif;
-  color: var(--text);
+    font-size: 3rem;
+    font-weight: 800;
+    margin-bottom: 0.5rem;
+    font-family: "Inter", system-ui, -apple-system, sans-serif;
+    /* Match reference sans-serif */
+    color: var(--text);
+    letter-spacing: -0.02em;
 }
 
 .timeline-subtitle {
-  font-size: 1.1rem;
-  color: var(--text-lighter);
+    font-size: 1.125rem;
+    color: var(--text-lighter);
+    font-family: "Inter", system-ui, sans-serif;
 }
 
 /* Layout Container */
 .timeline-content-area {
-  position: relative;
-  max-width: 1100px;
-  margin: 0 auto;
-  padding: 0 20px;
+    position: relative;
+    max-width: 1100px;
+    margin: 0 auto;
+    padding: 20 20px;
 }
 
 /* --- THE BEAM LINES --- */
 
 /* 1. Background Gray Line */
 .timeline-line-bg {
-  position: absolute;
-  top: 0;
-  bottom: 0;
-  width: 2px;
-  background-color: rgba(200, 200, 200, 0.2);
-  z-index: 1;
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 3px;
+    /* Slightly thicker */
+    background-color: #e5e7eb;
+    /* Tailwind gray-200 */
+    z-index: -1000;
 }
 
 /* 2. Active Glowing Line */
 .timeline-line-active {
-  position: absolute;
-  top: 0;
-  width: 2px;
-  background: linear-gradient(to bottom, #474af0, #a855f7);
-  z-index: 2;
-  box-shadow: 0 0 15px rgba(71, 74, 240, 0.5);
+    position: absolute;
+    top: 0;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 3px;
+    background: linear-gradient(to bottom, #6366f1, #a855f7);
+    /* Indigo to Purple */
+    z-index: -1000;
+    box-shadow: 0 0 15px rgba(99, 102, 241, 0.4);
 }
 
 /* 3. The Glowing Head/Tip */
 .timeline-beam-head {
-  position: absolute;
-  bottom: 0;
-  left: 50%;
-  transform: translateX(-50%);
-  width: 12px;
-  height: 12px;
-  background: #a855f7;
-  border-radius: 50%;
-  box-shadow: 0 0 20px 5px rgba(168, 85, 247, 0.6);
-  z-index: 3;
+    position: absolute;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 24px;
+    /* Larger glow area */
+    height: 24px;
+    background: radial-gradient(circle, #a855f7 30%, transparent 70%);
+    border-radius: 50%;
+    box-shadow: 0 0 30px 10px rgba(168, 85, 247, 0.5);
+    /* Large soft glow */
+    z-index: 1000;
+    margin-top: -12px;
+    /* Center vertically on the tip */
 }
 
 /* --- CARDS & ROW --- */
 
 .timeline-row {
-  display: flex;
-  align-items: center;
-  margin-bottom: 6rem; /* Space between events */
-  position: relative;
-  z-index: 10;
+    display: flex;
+    align-items: center;
+    margin-bottom: 4rem;
+    position: relative;
+    z-index: 10;
 }
 
 .timeline-card {
-  flex: 1;
-  background: var(--card-bg);
-  border: 1px solid var(--border);
-  border-radius: 16px;
-  padding: 2rem;
-  box-shadow: var(--shadow);
-  transition: all 0.3s ease;
-  position: relative;
+    flex: 1;
+    background: rgba(61, 60, 61, 0.5);
+    /* Glass effect */
+    /* Override global border variable for a cleaner look */
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    border-radius: 12px;
+    padding: 2rem;
+    box-shadow: 0 4px 30px rgba(0, 0, 0, 0.5);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    transition: all 0.3s ease;
+    position: relative;
+    text-align: left;
+    z-index: 0;
+    /* Force left align text inside cards */
+}
+
+/* Dark mode adjustments for card */
+html.dark .timeline-card {
+    border-color: #374151;
+    background: #1f2937;
 }
 
 .timeline-card:hover {
-  transform: translateY(-5px);
-  box-shadow: var(--shadow-hover);
-  border-color: var(--accent);
+    box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+    border-color: #e5e7eb;
 }
 
 .card-date {
-  display: inline-flex;
-  align-items: center;
-  gap: 6px;
-  font-size: 0.85rem;
-  font-weight: 600;
-  color: var(--text-lighter);
-  margin-bottom: 12px;
-  text-transform: uppercase;
-  letter-spacing: 0.5px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 0.875rem;
+    font-weight: 600;
+    color: var(--text);
+    /* Darker date color */
+    margin-bottom: 8px;
+    font-family: "Inter", sans-serif;
 }
 
 .card-title {
-  font-size: 1.5rem;
-  font-weight: 700;
-  margin-bottom: 5px;
-  color: var(--text);
+    font-size: 1.5rem;
+    font-weight: 800;
+    margin-bottom: 4px;
+    color: var(--text);
+    font-family: "Inter", sans-serif;
+    letter-spacing: -0.01em;
 }
 
 .card-subtitle {
-  font-size: 1rem;
-  font-weight: 500;
-  color: var(--accent); /* Highlight company/school name */
-  margin-bottom: 15px;
+    font-size: 1rem;
+    font-weight: 500;
+    color: #6b7280;
+    /* Gray-500 */
+    margin-bottom: 12px;
 }
 
 .card-description {
-  font-size: 0.95rem;
-  color: var(--text-lighter);
-  line-height: 1.7;
+    font-size: 1rem;
+    color: #4b5563;
+    /* Gray-600 */
+    line-height: 1.6;
 }
 
-/* The Circle Dot on the Line */
+html.dark .card-subtitle {
+    color: #9ca3af;
+}
+
+html.dark .card-description {
+    color: #d1d5db;
+}
+
+/* The Circle Dot on the Line (Station Marker) */
 .timeline-dot {
-  position: absolute;
-  width: 20px;
-  height: 20px;
-  border-radius: 50%;
-  background: var(--bg);
-  border: 3px solid #ccc;
-  z-index: 4;
-  transition: all 0.4s ease;
+    position: absolute;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    background: #ffffff;
+    border: 4px solid #000000;
+    /* Thick black border as in reference */
+    z-index: 5;
+    transition: all 0.3s ease;
+}
+
+html.dark .timeline-dot {
+    background: #000000;
+    border-color: #ffffff;
 }
 
 .timeline-dot.active {
-  background: #fff;
-  border-color: #474af0;
-  box-shadow: 0 0 0 4px rgba(71, 74, 240, 0.2);
-  transform: scale(1.2);
+    transform: translateX(-50%) scale(1.1);
+    border-color: #4f46e5;
+    /* Indigo border when active */
 }
 
 /* Spacer for grid layout */
 .timeline-spacer {
-  flex: 1;
+    flex: 1;
 }
 
 /* --- RESPONSIVE LAYOUT --- */
 
 /* Desktop (Alternating) */
 @media (min-width: 769px) {
-  .timeline-line-bg, .timeline-line-active {
-    left: 50%;
-    transform: translateX(-50%);
-  }
-  
-  .timeline-dot {
-    left: 50%;
-    transform: translateX(-50%);
-  }
 
-  /* Odd Items: Card Left, Spacer Right */
-  .timeline-row:nth-child(odd) {
-    flex-direction: row;
-  }
-  .timeline-row:nth-child(odd) .timeline-card {
-    margin-right: 50px;
-    text-align: right;
-  }
-  .timeline-row:nth-child(odd) .card-date {
-    justify-content: flex-end; /* Align date icon to text */
-    flex-direction: row-reverse; 
-  }
+    /* Odd Items: Card Left, Spacer Right */
+    .timeline-row:nth-child(odd) {
+        flex-direction: row;
+    }
 
-  /* Even Items: Spacer Left, Card Right */
-  .timeline-row:nth-child(even) {
-    flex-direction: row-reverse;
-  }
-  .timeline-row:nth-child(even) .timeline-card {
-    margin-left: 50px;
-    text-align: left;
-  }
+    .timeline-row:nth-child(odd) .timeline-card {
+        margin-right: 60px;
+        /* Gap from line */
+    }
+
+    /* Even Items: Spacer Left, Card Right */
+    .timeline-row:nth-child(even) {
+        flex-direction: row-reverse;
+    }
+
+    .timeline-row:nth-child(even) .timeline-card {
+        margin-left: 60px;
+        /* Gap from line */
+    }
 }
 
 /* Mobile (Stacked) */
 @media (max-width: 768px) {
-  .timeline-line-bg, .timeline-line-active {
-    left: 20px;
-  }
-  
-  .timeline-dot {
-    left: 20px;
-    transform: translateX(-50%);
-  }
-  .timeline-dot.active {
-    transform: translateX(-50%) scale(1.2);
-  }
 
-  .timeline-row {
-    flex-direction: column;
-    align-items: flex-start;
+    .timeline-line-bg,
+    .timeline-line-active,
+    .timeline-beam-head {
+        left: 24px;
+        /* Align line to left */
+    }
+
+    .timeline-dot {
+        left: 24px;
+    }
+
+    .timeline-row {
+        flex-direction: column;
+        align-items: flex-start;
+        margin-bottom: 3rem;
+        padding-left: 0;
+    }
+
+    .timeline-card {
+        margin-left: 60px;
+        /* Gap from line */
+    }
+
+    .timeline-row:nth-child(odd) .timeline-card {
+        margin-right: 0;
+    }
+
+    .timeline-row:nth-child(even) .timeline-card {
+        margin-left: 60px;
+    }
+
+    .timeline-line-bg {
+        width: 5px;
+        /* Slightly thicker than active line */
+        background-color: #e5e7eb;
+        /* Tailwind gray-200 */
+        z-index: -1000;
+        transform: none;
+        /* Remove horizontal centering for mobile */
+    }
+}
+
+/* 2. Active Glowing Line */
+.timeline-line-active {
+    position: absolute;
+    top: 0;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 3px;
+    background: linear-gradient(to bottom, #6366f1, #a855f7);
+    /* Indigo to Purple */
+    z-index: -1000;
+    box-shadow: 0 0 15px rgba(99, 102, 241, 0.4);
+}
+
+/* 3. The Glowing Head/Tip */
+.timeline-beam-head {
+    position: absolute;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 24px;
+    /* Larger glow area */
+    height: 24px;
+    background: radial-gradient(circle, #a855f7 30%, transparent 70%);
+    border-radius: 50%;
+    box-shadow: 0 0 30px 10px rgba(168, 85, 247, 0.5);
+    /* Large soft glow */
+    z-index: 1000;
+    margin-top: -12px;
+    /* Center vertically on the tip */
+}
+
+/* --- CARDS & ROW --- */
+
+.timeline-row {
+    display: flex;
+    align-items: center;
     margin-bottom: 4rem;
-  }
-  
-  .timeline-spacer {
-    display: none;
-  }
-  
-  .timeline-card {
-    width: 100%;
-    margin-left: 50px; /* Make space for the line */
+    position: relative;
+    z-index: 10;
+}
+
+.timeline-card {
+    flex: 1;
+    background: rgba(61, 60, 61, 0.5);
+    /* Glass effect */
+    /* Override global border variable for a cleaner look */
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    border-radius: 12px;
+    padding: 2rem;
+    box-shadow: 0 4px 30px rgba(0, 0, 0, 0.5);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    transition: all 0.3s ease;
+    position: relative;
     text-align: left;
-  }
+    z-index: 0;
+    /* Force left align text inside cards */
+}
+
+/* Dark mode adjustments for card */
+html.dark .timeline-card {
+    border-color: #374151;
+    background: #1f2937;
+}
+
+.timeline-card:hover {
+    box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+    border-color: #e5e7eb;
+}
+
+.card-date {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 0.875rem;
+    font-weight: 600;
+    color: var(--text);
+    /* Darker date color */
+    margin-bottom: 8px;
+    font-family: "Inter", sans-serif;
+}
+
+.card-title {
+    font-size: 1.5rem;
+    font-weight: 800;
+    margin-bottom: 4px;
+    color: var(--text);
+    font-family: "Inter", sans-serif;
+    letter-spacing: -0.01em;
+}
+
+.card-subtitle {
+    font-size: 1rem;
+    font-weight: 500;
+    color: #6b7280;
+    /* Gray-500 */
+    margin-bottom: 12px;
+}
+
+.card-description {
+    font-size: 1rem;
+    color: #4b5563;
+    /* Gray-600 */
+    line-height: 1.6;
+}
+
+html.dark .card-subtitle {
+    color: #9ca3af;
+}
+
+html.dark .card-description {
+    color: #d1d5db;
+}
+
+/* The Circle Dot on the Line (Station Marker) */
+.timeline-dot {
+    position: absolute;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    background: #ffffff;
+    border: 4px solid #000000;
+    /* Thick black border as in reference */
+    z-index: 5;
+    transition: all 0.3s ease;
+}
+
+html.dark .timeline-dot {
+    background: #000000;
+    border-color: #ffffff;
+}
+
+.timeline-dot.active {
+    transform: translateX(-50%) scale(1.1);
+    border-color: #4f46e5;
+    /* Indigo border when active */
+}
+
+/* Spacer for grid layout */
+.timeline-spacer {
+    flex: 1;
+}
+
+/* --- RESPONSIVE LAYOUT --- */
+
+/* Desktop (Alternating) */
+@media (min-width: 769px) {
+
+    /* Odd Items: Card Left, Spacer Right */
+    .timeline-row:nth-child(odd) {
+        flex-direction: row;
+    }
+
+    .timeline-row:nth-child(odd) .timeline-card {
+        margin-right: 60px;
+        /* Gap from line */
+    }
+
+    /* Even Items: Spacer Left, Card Right */
+    .timeline-row:nth-child(even) {
+        flex-direction: row-reverse;
+    }
+
+    .timeline-row:nth-child(even) .timeline-card {
+        margin-left: 60px;
+        /* Gap from line */
+    }
+}
+
+/* Mobile (Stacked) */
+/* ---- MOBILE: Smaller card & right aligned ---- */
+@media (max-width: 768px) {
+
+    /* Make card smaller */
+    .timeline-card {
+        width: 78% !important;
+        /* Smaller width */
+        margin-left: auto !important;
+        margin-right: 0 !important;
+        padding: 1.4rem !important;
+        /* Slightly smaller padding */
+    }
+
+    /* Ensure row pushes card to right */
+    .timeline-row {
+        width: 100%;
+        align-items: flex-start !important;
+    }
+
+    .timeline-beam-head {
+        z-index: -1000;
+    }
+
+    /* Line stays left */
+    .timeline-line-bg,
+    .timeline-line-active,
+    .timeline-beam-head,
+    .timeline-dot {
+        left: 22px !important;
+    }
 }

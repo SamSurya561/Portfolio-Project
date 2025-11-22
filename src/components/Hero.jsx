@@ -11,7 +11,7 @@ const Hero = () => {
 
   // State for Firebase data
   const [cvUrl, setCvUrl] = useState(null);
-  const [profileImgUrl, setProfileImgUrl] = useState(null); 
+  const [profileImgUrl, setProfileImgUrl] = useState(null);
 
   useEffect(() => {
     // Listen for website settings (CV, Profile Image, etc)
@@ -20,7 +20,7 @@ const Hero = () => {
         const data = doc.data();
         // Get CV URL
         if (data.cvUrl) setCvUrl(data.cvUrl);
-        
+
         // Get Profile Image URL
         if (data.profileImageUrl) setProfileImgUrl(data.profileImageUrl);
       }
@@ -31,7 +31,7 @@ const Hero = () => {
   // Typing effect logic
   useEffect(() => {
     const words = ["Graphic Designer", "UI/UX Designer", "Web Designer"];
-    
+
     const handleTyping = () => {
       const i = loopNum % words.length;
       const fullText = words[i];
@@ -58,7 +58,7 @@ const Hero = () => {
           <div className="info-home">
             <p className="home-p"><span className="home-s">. </span>Available for work</p>
             <h1>Hi, I'm Sharmila</h1>
-            <h3>{text}<span className="cursor" style={{color: '#474af0'}}>|</span></h3>
+            <h3>{text}<span className="cursor" style={{ color: '#474af0' }}>|</span></h3>
             <div className="info-p">
               <p>I create beautiful, functional, and user-centered digital experiences.</p>
               <p>With 2+ years of experience in web development, I bring ideas to life through clean code and thoughtful design.</p>
@@ -69,10 +69,12 @@ const Hero = () => {
             </div>
 
             <div className="btnn">
-              <button className="btn-home1"><i className="fa-solid fa-arrow-right"></i> Contact</button>
-              <a 
-                href={cvUrl || '#'} 
-                target="_blank" 
+              <a href="#contact" style={{ textDecoration: 'none' }}>
+                <button className="btn-home1"><i className="fa-solid fa-arrow-right"></i> Contact</button>
+              </a>
+              <a
+                href={cvUrl || '#'}
+                target="_blank"
                 rel="noopener noreferrer"
                 style={{ textDecoration: 'none' }}
               >
@@ -87,7 +89,7 @@ const Hero = () => {
             <div className="follow">
               <p className="followw">Follow me:</p>
               <ul>
-                
+
                 <li><a href="http://www.linkedin.com/in/sharmila-sharmi" aria-label="LinkedIn"><i className="fa-brands fa-linkedin"></i></a></li>
                 <li><a href="https://www.instagram.com/sharms__21/" aria-label="Instagram"><i className="fa-brands fa-instagram"></i></a></li>
                 <a href="https://wa.me/213554139526" target="_blank" rel="noopener noreferrer" aria-label="WhatsApp"><i className="fa-brands fa-whatsapp"></i></a>
@@ -95,13 +97,13 @@ const Hero = () => {
             </div>
           </div>
         </div>
-        
+
         {/* Only render image if profileImgUrl exists */}
         {profileImgUrl && (
-            <img 
-              src={profileImgUrl} 
-              alt="profile visual" 
-            />
+          <img
+            src={profileImgUrl}
+            alt="profile visual"
+          />
         )}
       </div>
     </section>
