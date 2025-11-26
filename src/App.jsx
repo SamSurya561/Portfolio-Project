@@ -1,5 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { BrowserRouter as Router, Routes, Route, useLocation } from 'react-router-dom';
+import { doc, onSnapshot } from "firebase/firestore";
+import { db } from './firebase';
 
 // Components
 import Loader from './components/Loader';
@@ -13,27 +15,22 @@ import Footer from './components/Footer';
 import AllProjects from './components/AllProjects';
 import ScrollManager from './components/ScrollManager';
 
-
-// ScrollHandler to manage scroll behavior
 const ScrollHandler = () => {
   const location = useLocation();
 
   useEffect(() => {
-    window.scrollTo(0, 0); // Reset scroll to top on route change
-
+    window.scrollTo(0, 0);
     const handleScroll = () => {
       const reveals = document.querySelectorAll('.reveal');
       reveals.forEach(el => {
         const windowHeight = window.innerHeight;
         const elementTop = el.getBoundingClientRect().top;
         const revealPoint = 150;
-
         if (elementTop < windowHeight - revealPoint) {
           el.classList.add('active-reveal');
         }
       });
     };
-
     setTimeout(handleScroll, 100);
     window.addEventListener('scroll', handleScroll);
     return () => window.removeEventListener('scroll', handleScroll);
@@ -42,7 +39,6 @@ const ScrollHandler = () => {
   return null;
 };
 
-// Home Page Component (Removed Navbar from here)
 const Home = () => (
   <>
     <main>
@@ -58,29 +54,109 @@ const Home = () => (
 
 function App() {
   const [loading, setLoading] = useState(true);
+  // Store settings in state so we can re-apply them when theme changes
+  const [websiteSettings, setWebsiteSettings] = useState(null);
+
+  // 1. Listen to Firestore Data
+  useEffect(() => {
+    const unsub = onSnapshot(doc(db, "settings", "website"), (doc) => {
+      if (doc.exists()) {
+        const data = doc.data();
+        setWebsiteSettings(data);
+        applyTheme(data); // Apply immediately on data change
+      }
+    });
+    return () => unsub();
+  }, []);
+
+  // 2. Listen to Theme Changes (Light/Dark toggle)
+  useEffect(() => {
+    // Create a MutationObserver to watch for class changes on the <html> tag
+    const observer = new MutationObserver((mutations) => {
+      mutations.forEach((mutation) => {
+        if (mutation.attributeName === 'class') {
+          // Re-apply theme settings whenever 'dark' class is added/removed
+          if (websiteSettings) {
+            applyTheme(websiteSettings);
+          }
+        }
+      });
+    });
+
+    observer.observe(document.documentElement, { attributes: true });
+    return () => observer.disconnect();
+  }, [websiteSettings]);
+
+  const applyTheme = (settings) => {
+    const root = document.documentElement;
+    const body = document.body;
+
+    // Check if Dark Mode is active
+    const isDark = root.classList.contains('dark');
+
+    // 1. Apply Accent Color
+    if (settings.accentColor) {
+      root.style.setProperty('--accent', settings.accentColor);
+    }
+
+    // 2. Reset Background
+    body.style.backgroundImage = '';
+    body.style.backgroundColor = '';
+
+    // 3. Determine which values to use based on Mode
+    const type = settings.backgroundType || 'solid';
+
+    if (type === 'solid') {
+      // Use Dark Color if dark mode, else Light Color
+      const color = isDark
+        ? (settings.darkBackgroundColor || '#121212')
+        : (settings.lightBackgroundColor || '#ffffff');
+
+      body.style.backgroundColor = color;
+    }
+    else if (type === 'gradient') {
+      const start = isDark
+        ? (settings.darkGradientStart || '#121212')
+        : (settings.lightGradientStart || '#ffffff');
+
+      const end = isDark
+        ? (settings.darkGradientEnd || '#000000')
+        : (settings.lightGradientEnd || '#f0f0f0');
+
+      body.style.backgroundImage = `linear-gradient(135deg, ${start}, ${end})`;
+      body.style.backgroundAttachment = 'fixed';
+      body.style.backgroundSize = 'cover';
+    }
+    else if (type === 'image') {
+      const imageUrl = isDark
+        ? settings.darkBackgroundImageUrl
+        : settings.lightBackgroundImageUrl;
+
+      if (imageUrl) {
+        body.style.backgroundImage = `url(${imageUrl})`;
+        body.style.backgroundSize = 'cover';
+        body.style.backgroundPosition = 'center';
+        body.style.backgroundAttachment = 'fixed';
+        body.style.backgroundRepeat = 'no-repeat';
+      } else {
+        // Fallback if image is missing for that mode
+        body.style.backgroundColor = isDark ? '#121212' : '#ffffff';
+      }
+    }
+  };
 
   return (
     <>
-      {/* Loader */}
       {loading && <Loader onLoaded={() => setLoading(false)} />}
-
       <Router>
         <ScrollManager />
-
-        {/* FIX: Navbar is now outside the animated main-page div */}
-        {/* We show it only when loading is finished so it fades in nicely */}
         {!loading && <Navbar />}
-
-        {/* Main Content (This animates up) */}
         <div id="main-page" className={!loading ? 'visible' : ''}>
           <Routes>
             <Route path="/" element={<Home />} />
             <Route path="/all-projects" element={<AllProjects />} />
           </Routes>
         </div>
-
-        {/* Rating Popup - Shows on all pages */}
-        {!loading}
       </Router>
     </>
   );

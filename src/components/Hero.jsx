@@ -11,18 +11,24 @@ const Hero = () => {
 
   // State for Firebase data
   const [cvUrl, setCvUrl] = useState(null);
-  const [profileImgUrl, setProfileImgUrl] = useState(null);
+  // CHANGED: Renamed state variable to reflect it's the Hero Image
+  const [heroImgUrl, setHeroImgUrl] = useState(null);
 
   useEffect(() => {
-    // Listen for website settings (CV, Profile Image, etc)
+    // Listen for website settings (CV, Hero Image, etc)
     const unsub = onSnapshot(doc(db, "settings", "website"), (doc) => {
       if (doc.exists()) {
         const data = doc.data();
         // Get CV URL
         if (data.cvUrl) setCvUrl(data.cvUrl);
 
-        // Get Profile Image URL
-        if (data.profileImageUrl) setProfileImgUrl(data.profileImageUrl);
+        // CHANGED: Fetch 'heroImageUrl' instead of 'profileImageUrl'
+        if (data.heroImageUrl) {
+          setHeroImgUrl(data.heroImageUrl);
+        } else if (data.profileImageUrl) {
+          // Fallback to profile image if hero image isn't set yet
+          setHeroImgUrl(data.profileImageUrl);
+        }
       }
     });
     return () => unsub();
@@ -98,11 +104,11 @@ const Hero = () => {
           </div>
         </div>
 
-        {/* Only render image if profileImgUrl exists */}
-        {profileImgUrl && (
+        {/* CHANGED: Render using the new heroImgUrl state */}
+        {heroImgUrl && (
           <img
-            src={profileImgUrl}
-            alt="profile visual"
+            src={heroImgUrl}
+            alt="hero visual"
           />
         )}
       </div>

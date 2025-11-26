@@ -79,9 +79,11 @@ body {
   font-family: "Montserrat", sans-serif;
   background-color: var(--bg);
   color: var(--text);
-  transition: background-color 0.2s ease, color 0.2s ease;
+  transition: background-color 0.5s ease, color 0.2s ease;
   overflow-x: hidden;
   line-height: 1.6;
+  /* Ensure background covers whole page even if content is short */
+  min-height: 100vh;
 }
 
 /* =========================================
