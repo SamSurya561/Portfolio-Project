@@ -1,8 +1,11 @@
 // src/components/ScrollManager.jsx
 import { useEffect } from 'react';
 import Lenis from 'lenis';
+import { useScroll } from '../contexts/ScrollContext';
 
 const ScrollManager = () => {
+  const { setLenis } = useScroll();
+
   useEffect(() => {
     if (typeof window === 'undefined') return;
 
@@ -17,6 +20,8 @@ const ScrollManager = () => {
       gestureOrientation: 'vertical'
     });
 
+    setLenis(lenis);
+
     let rafId;
     function raf(time) {
       lenis.raf(time);
@@ -26,18 +31,24 @@ const ScrollManager = () => {
 
     const handleResize = () => {
       if (window.innerWidth <= 760) {
-        try { lenis.destroy(); } catch (e) {}
+        try {
+          lenis.destroy();
+          setLenis(null);
+        } catch (e) { }
         if (rafId) cancelAnimationFrame(rafId);
       }
     };
 
     window.addEventListener('resize', handleResize);
     return () => {
-      try { lenis.destroy(); } catch (e) {}
+      try {
+        lenis.destroy();
+        setLenis(null);
+      } catch (e) { }
       if (rafId) cancelAnimationFrame(rafId);
       window.removeEventListener('resize', handleResize);
     };
-  }, []);
+  }, [setLenis]);
 
   return null;
 };

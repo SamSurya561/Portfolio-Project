@@ -14,6 +14,7 @@ import Contact from './components/Contact';
 import Footer from './components/Footer';
 import AllProjects from './components/AllProjects';
 import ScrollManager from './components/ScrollManager';
+import { ScrollProvider } from './contexts/ScrollContext';
 
 const ScrollHandler = () => {
   const location = useLocation();
@@ -146,7 +147,7 @@ function App() {
   };
 
   return (
-    <>
+    <ScrollProvider>
       {loading && <Loader onLoaded={() => setLoading(false)} />}
       <Router>
         <ScrollManager />
@@ -158,7 +159,7 @@ function App() {
           </Routes>
         </div>
       </Router>
-    </>
+    </ScrollProvider>
   );
 }
 

@@ -108,6 +108,7 @@ header {
   padding: 20px 0;
 }
 
+/* DESKTOP NAV WRAP */
 .ul-list {
   list-style: none;
   display: flex;
@@ -117,24 +118,52 @@ header {
   padding: 10px 25px;
   border-radius: 25px;
   border: 1px solid transparent;
+
+  position: relative;
+  /* pill is positioned relative to ul */
+  overflow: visible;
+  /* allow pill glow */
+  z-index: 1000;
 }
 
 html.dark .ul-list {
   border: 1px solid var(--border);
 }
 
+/* each li sits ABOVE the pill */
 .ul-list li {
+  position: relative;
+  z-index: 3;
   display: flex;
   align-items: center;
   gap: 6px;
   border-radius: 25px;
   transition: 0.3s;
-  /* Navbar Intro Animation */
   opacity: 0;
   transform: translateY(-20px);
   animation: fadeDown 0.8s ease-out forwards;
+  /* Fix misalignment */
+  line-height: 1;
+  padding: 6px 10px;
+  /* keeps pill alignment clean */
 }
 
+.icon-wrapper {
+  display: flex;
+  align-items: center;
+  /* force icon to center vertically */
+  justify-content: center;
+  line-height: 0;
+  /* removes extra font vertical space */
+}
+
+
+/* active li slightly higher so its icon/text are always above pill */
+.ul-list li.active {
+  z-index: 4;
+}
+
+/* link text */
 .ul-list li a {
   font-family: "Montserrat", sans-serif;
   text-decoration: none;
@@ -142,14 +171,154 @@ html.dark .ul-list {
   font-weight: 500;
 }
 
-.ul-list li.active {
-  background-color: var(--border);
-  padding: 10px 15px;
+/* DESKTOP DYNAMIC-ISLAND PILL (single shared pill injected via JS) */
+.desktop-pill {
+  position: absolute;
+  top: 54%;
+  left: 50%;
+  transform: translate(-50%, -50%) scaleX(1);
+  pointer-events: none;
+  z-index: 1;
+  display: block;
+
+  height: 32px;
+  min-width: 52px;
+  max-width: 260px;
+  padding: 0 14px;
+  border-radius: 999px;
+  background: var(--border);
+  box-shadow: 0 10px 30px rgba(8, 18, 24, 0.18);
+
+  /* NOTE: width is NOT animated here (we'll set it instantly in JS) */
+  transition:
+    left .48s cubic-bezier(.22, 1, .36, 1),
+    transform .42s cubic-bezier(.22, 1, .36, 1),
+    border-radius .35s cubic-bezier(.22, 1, .36, 1),
+    background-color .18s ease,
+    box-shadow .18s ease;
+  will-change: left, transform, border-radius;
+  overflow: hidden;
 }
 
+
+/* -------------------------
+   Smooth startup: temporarily disable nav li keyframe animation while JS measures & places pill
+   ------------------------- */
+
+/* When .no-anim is present on ul-list, stop the keyframe entrance animation and show items instantly */
+.ul-list.no-anim li {
+  animation: none !important;
+  opacity: 1 !important;
+  transform: translateY(0) !important;
+}
+
+/* small optional: ensure the pill still transitions after load */
+.ul-list.no-anim .desktop-pill,
+.glass-dock .active-pill {
+  transition: none !important;
+  /* immediate placement during init */
+}
+
+/* After setup, JS will remove .no-anim so the nav items can animate normally again */
+
+
+/* subtle glossy highlight */
+.desktop-pill::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.04), rgba(255, 255, 255, 0.01));
+  mix-blend-mode: overlay;
+  pointer-events: none;
+}
+
+/* morph via transform scaleX (no width transition) */
+.desktop-pill.pop {
+  animation: pillMorphDesktopTransform .52s cubic-bezier(.22, 1, .36, 1) both;
+}
+
+/* pressed state */
+.desktop-pill.pressed {
+  transform: translate(-50%, -50%) scale(0.996) scaleX(1);
+  box-shadow: 0 8px 22px rgba(8, 18, 24, 0.14);
+}
+
+/* keyframes now animate transform scaleX */
+@keyframes pillMorphDesktopTransform {
+  0% {
+    transform: translate(-50%, -50%) scaleX(1) scaleY(1);
+    border-radius: 999px;
+    box-shadow: 0 10px 30px rgba(8, 18, 24, 0.18);
+  }
+
+  22% {
+    transform: translate(-50%, -50%) scaleX(1.18) scaleY(.96);
+    border-radius: 40px;
+    box-shadow: 0 14px 36px rgba(8, 18, 24, 0.22);
+  }
+
+  55% {
+    transform: translate(-50%, -50%) scaleX(.95) scaleY(1.04);
+    border-radius: 42px;
+    box-shadow: 0 8px 22px rgba(8, 18, 24, 0.16);
+  }
+
+  100% {
+    transform: translate(-50%, -50%) scaleX(1) scaleY(1);
+    border-radius: 999px;
+    box-shadow: 0 10px 30px rgba(8, 18, 24, 0.18);
+  }
+}
+
+/* dark mode tweak */
+html.dark .desktop-pill {
+  background: var(--border);
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.45);
+}
+
+/* reduced motion respect */
+@media (prefers-reduced-motion: reduce) {
+
+  .desktop-pill,
+  .desktop-pill.pop {
+    transition: none !important;
+    animation: none !important;
+  }
+}
+
+/* ICONS: default outline style, follow currentColor */
+.ul-list li a svg,
+.ul-list li svg {
+  width: 18px;
+  height: 18px;
+  fill: none !important;
+  stroke: currentColor !important;
+  stroke-width: 1.6 !important;
+  stroke-linecap: round !important;
+  stroke-linejoin: round !important;
+  color: inherit !important;
+  transition: color .18s ease, stroke .18s ease, transform .18s ease;
+}
+
+/* default icon/text color */
+.ul-list li,
+.ul-list li a {
+  color: var(--text);
+}
+
+/* ACTIVE: text + icon use bg color (white in light, black in dark) on top of pill */
 .ul-list li.active a,
-.ul-list li.active i {
-  color: var(--bg);
+.ul-list li.active svg {
+  color: var(--bg) !important;
+  stroke: var(--bg) !important;
+}
+
+/* dark mode active is still handled by var(--bg) = #000 */
+html.dark .ul-list li.active a,
+html.dark .ul-list li.active svg {
+  color: var(--bg) !important;
+  stroke: var(--bg) !important;
 }
 
 /* Navbar Animation Delays */
@@ -188,6 +357,7 @@ html.dark .ul-list {
     transform: translateY(0);
   }
 }
+
 
 /* =========================================
    4. SECTIONS (DEFAULT / DESKTOP)
@@ -1102,137 +1272,311 @@ html.dark .service-card {
 /* =========================================
    13. MOBILE BOTTOM LIQUID NAV (GLASS DOCK)
    ========================================= */
+
+
+/* =========================================
+   13. MOBILE BOTTOM LIQUID NAV (GLASS DOCK)
+   UPGRADED - Sliding shared pill, outline icons, polished UX
+   (Replace existing mobile-bottom-nav / glass-dock CSS with this)
+   ========================================= */
+
 .mobile-bottom-nav {
   display: none;
-  /* Hidden on desktop */
+  /* shown only on mobile via media query below */
   position: fixed;
   bottom: 20px;
   left: 50%;
   transform: translateX(-50%);
   z-index: 5000;
   width: 92%;
-  max-width: 400px;
+  max-width: 420px;
+  pointer-events: none;
+  /* allow clicks through margins */
 }
 
+/* glass dock container */
 .glass-dock {
+  pointer-events: auto;
   display: flex;
   justify-content: space-between;
   align-items: center;
-  /* High blur and light opacity for Liquid Glass feel */
-  background: rgba(255, 255, 255, 0.3);
-  backdrop-filter: blur(20px) saturate(180%);
-  -webkit-backdrop-filter: blur(20px) saturate(180%);
-  border-radius: 50px;
-  border: 1px solid rgba(255, 255, 255, 0.4);
-  box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.1);
-  padding: 8px 20px;
+  gap: 6px;
+  padding: 10px 16px;
+  background: rgba(255, 255, 255, 0.20);
+  /* subtle glass */
+  backdrop-filter: blur(16px) saturate(150%);
+  -webkit-backdrop-filter: blur(16px) saturate(150%);
+  border-radius: 58px;
+  border: 1px solid rgba(255, 255, 255, 0.35);
+  box-shadow: 0 14px 40px rgba(10, 20, 30, 0.12);
   position: relative;
-  overflow: hidden;
+  overflow: visible;
 }
 
+/* dark glass */
 html.dark .glass-dock {
-  background: rgba(0, 0, 0, 0.3);
-  border: 1px solid rgba(255, 255, 255, 0.1);
+  background: rgba(0, 0, 0, 0.22);
+  border: 1px solid rgba(255, 255, 255, 0.07);
+  box-shadow: 0 14px 40px rgba(0, 0, 0, 0.6);
 }
 
-/* Navigation Items */
+/* nav items layout */
 .dock-item {
   position: relative;
   display: flex;
   flex-direction: column;
   align-items: center;
-  justify-content: center;
+  gap: 6px;
+  flex: 1 1 auto;
+  padding: 6px 6px;
   text-decoration: none;
+  cursor: pointer;
   color: var(--text-lighter);
-  z-index: 2;
-  padding: 8px 0;
-  flex: 1;
-  transition: all 0.4s cubic-bezier(0.25, 1, 0.5, 1);
+  transition: color .18s ease, transform .22s cubic-bezier(.2, .9, .25, 1), opacity .2s ease;
+  user-select: none;
 }
 
-/* Theme toggle inside nav needs to behave like an item */
+/* theme item (rightmost) */
 .theme-item {
   display: flex;
-  justify-content: center;
   align-items: center;
-  padding-left: 10px;
-  border-left: 1px solid rgba(128, 128, 128, 0.2);
-  margin-left: 5px;
-  max-width: 40px;
+  justify-content: center;
+  padding-left: 8px;
+  margin-left: 6px;
+  border-left: 1px solid rgba(128, 128, 128, 0.12);
+  max-width: 48px;
 }
 
-/* Icons */
+/* icon container */
 .icon-container {
-  margin-bottom: 4px;
-  transition: transform 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
   font-size: 20px;
-  position: relative;
-  z-index: 5;
+  line-height: 1;
+  transition: transform .28s cubic-bezier(.2, .9, .25, 1), color .18s ease, opacity .18s ease;
+  z-index: 6;
 }
 
-/* Labels */
+/* label baseline */
 .dock-label {
-  font-size: 9px;
+  font-size: 11px;
   font-weight: 600;
-  opacity: 0.8;
-  transition: all 0.3s ease;
-  position: relative;
-  z-index: 5;
+  opacity: 0.0;
+  /* hidden by default — will show for active or focus */
+  transform: translateY(6px) scale(.96);
+  transition: opacity .22s ease, transform .22s cubic-bezier(.2, .9, .25, 1), font-size .18s ease;
+  white-space: nowrap;
+  pointer-events: none;
+  color: var(--text);
+  z-index: 6;
 }
 
-/* --- ACTIVE STATE ANIMATION --- */
+/* outline SVGs: use currentColor for stroke */
+.icon-container svg,
+.dock-item svg {
+  width: 20px;
+  height: 20px;
+  fill: none !important;
+  stroke: currentColor !important;
+  stroke-width: 1.6 !important;
+  stroke-linecap: round !important;
+  stroke-linejoin: round !important;
+  transition: color .18s ease, transform .18s ease, stroke .18s ease;
+  display: block;
+}
+
+/* inactive visuals (muted & small) */
+.dock-item:not(.active) .icon-container {
+  transform: translateY(0) scale(.90);
+  opacity: 0.75;
+}
+
+.dock-item:not(.active) .dock-label {
+  opacity: 0;
+}
+
+/* accessibility: show label on focus even if not active */
+.dock-item:focus-within .dock-label,
+.dock-item:focus .dock-label {
+  opacity: 1;
+  transform: translateY(0) scale(1);
+  color: var(--text);
+}
+
+/* active item: color overrides (icon + label) - actual pill provides background contrast */
 .dock-item.active {
-  color: #ffffff;
-  /* Text turns white to contrast with black bubble */
-}
-
-html.dark .dock-item.active {
-  color: #000000;
-  /* In dark mode, text turns black to contrast with white bubble */
-}
-
-/* Active Icon Effect: Floats up slightly */
-.dock-item.active .icon-container {
   transform: translateY(-2px);
+  z-index: 12;
 }
 
-/* THE LIQUID BUBBLE (ACTIVE INDICATOR) */
-/* Configured as a SOLID BLACK CIRCLE in Light Mode */
-.fluid-bubble {
+/* active icon + label styles */
+.dock-item.active .icon-container {
+  transform: translateY(-2px) scale(1.16);
+  opacity: 1;
+}
+
+.dock-item.active .dock-label {
+  opacity: 1;
+  transform: translateY(0) scale(1);
+  font-size: 13px;
+  color: var(--bg);
+  /* label will be color matched to background so it contrasts on pill */
+}
+
+/* ensure inline internals of SVGs inherit currentColor */
+.ul-list li svg path,
+.ul-list li svg circle,
+.ul-list li svg rect,
+.icon-container svg path,
+.icon-container svg circle,
+.icon-container svg rect {
+  fill: none !important;
+  stroke: currentColor !important;
+}
+
+/* ---------- SHARED PILL (created by JS) ---------- */
+/* the .active-pill element is injected into .glass-dock by JS */
+/* ---------- Dynamic Island style pill (replace existing .active-pill block) ---------- */
+/* ---------- Dynamic Island style pill (updated/improved) ---------- */
+
+
+.active-pill {
   position: absolute;
   top: 50%;
   left: 50%;
-  transform: translate(-50%, -50%);
-  width: 60px;
-  /* Increased size to cover text */
-  height: 60px;
-  background-color: #000000;
-  /* Solid Black */
-  border-radius: 50%;
-  z-index: 0;
-  /* Behind the icon/text */
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
-  animation: bubblePop 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
+  transform: translate(-50%, -50%) scaleX(1);
+  transform-origin: center;
+  z-index: 2;
+  pointer-events: none;
+  display: block;
+
+  height: 38px;
+  min-width: 54px;
+  padding: 0 16px;
+  border-radius: 999px;
+  background: var(--border);
+  box-shadow: 0 14px 38px rgba(8, 18, 24, 0.32);
+
+  /* DO NOT animate width; animate left + transform only */
+  transition:
+    left .50s cubic-bezier(.22, 1, .36, 1),
+    transform .45s cubic-bezier(.22, 1, .36, 1),
+    background-color .18s ease,
+    box-shadow .25s ease,
+    border-radius .35s cubic-bezier(.22, 1, .36, 1);
+  will-change: left, transform, border-radius;
+  overflow: hidden;
 }
 
-/* Dark Mode Bubble: White */
-html.dark .fluid-bubble {
-  background-color: #ffffff;
-  box-shadow: 0 4px 15px rgba(255, 255, 255, 0.3);
+.active-pill::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.06), rgba(255, 255, 255, 0.02));
+  mix-blend-mode: overlay;
+  pointer-events: none;
+  opacity: 0.9;
 }
 
-/* Bubble Entry Animation */
-@keyframes bubblePop {
+/* pop uses transform */
+.active-pill.pop {
+  animation: pillMorphTransform .52s cubic-bezier(.22, 1, .36, 1) both;
+}
+
+@keyframes pillMorphTransform {
   0% {
-    transform: translate(-50%, -50%) scale(0);
-    opacity: 0;
+    transform: translate(-50%, -50%) scaleX(1) scaleY(1);
+    border-radius: 999px;
+    box-shadow: 0 14px 38px rgba(8, 18, 24, 0.32);
+  }
+
+  22% {
+    transform: translate(-50%, -50%) scaleX(1.22) scaleY(.92);
+    border-radius: 48px;
+    box-shadow: 0 18px 48px rgba(8, 18, 24, 0.36);
+  }
+
+  55% {
+    transform: translate(-50%, -50%) scaleX(.92) scaleY(1.06);
+    border-radius: 46px;
+    box-shadow: 0 12px 30px rgba(8, 18, 24, 0.28);
   }
 
   100% {
-    transform: translate(-50%, -50%) scale(1);
-    opacity: 1;
+    transform: translate(-50%, -50%) scaleX(1) scaleY(1);
+    border-radius: 999px;
+    box-shadow: 0 14px 38px rgba(8, 18, 24, 0.32);
   }
 }
+
+html.dark .active-pill {
+  background: var(--border);
+  box-shadow: 0 12px 32px rgba(0, 0, 0, 0.6);
+}
+
+@media (prefers-reduced-motion: reduce) {
+
+  .active-pill,
+  .active-pill.pop {
+    transition: none !important;
+    animation: none !important;
+  }
+}
+
+/* Shadow subtlety when item is 'pressed' */
+.dock-item:active~.active-pill,
+.dock-item.active~.active-pill {
+  transform: translate(-50%, -50%) scale(1.02);
+}
+
+/* responsive tweak: smaller pill on very small screens */
+@media (max-width: 420px) {
+  .active-pill {
+    height: 34px;
+    padding: 0 12px;
+  }
+
+  .glass-dock {
+    padding: 8px 12px;
+    border-radius: 48px;
+  }
+
+  .dock-label {
+    font-size: 11px;
+  }
+
+  .dock-item.active .dock-label {
+    font-size: 12px;
+  }
+
+  .icon-container svg {
+    width: 18px;
+    height: 18px;
+  }
+}
+
+/* show mobile nav only on narrow screens */
+@media (max-width: 900px) {
+  .mobile-bottom-nav {
+    display: block;
+  }
+}
+
+/* QUICK HIDES: remove any old global bubbles leftover */
+.fluid-bubble,
+.floating-bubble,
+.global-bubble,
+.pill,
+.bubble {
+  display: none !important;
+}
+
+
+
+
+
 
 /* ===== Timeline specific styles (append to App.css) ===== */
 .timeline-section {
