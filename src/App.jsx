@@ -13,6 +13,7 @@ import Skills from './components/Skills';
 import Contact from './components/Contact';
 import Footer from './components/Footer';
 import AllProjects from './components/AllProjects';
+import ProjectDetails from './components/ProjectDetails';
 import ScrollManager from './components/ScrollManager';
 import { ScrollProvider } from './contexts/ScrollContext';
 
@@ -20,7 +21,24 @@ const ScrollHandler = () => {
   const location = useLocation();
 
   useEffect(() => {
-    window.scrollTo(0, 0);
+    // Check if we need to scroll to a specific section
+    if (location.state && location.state.scrollTo) {
+      const element = document.getElementById(location.state.scrollTo);
+      if (element) {
+        setTimeout(() => {
+          const offset = 80; // Navbar height offset
+          const elementPosition = element.getBoundingClientRect().top;
+          const offsetPosition = elementPosition + window.scrollY - offset;
+          window.scrollTo({
+            top: offsetPosition,
+            behavior: "smooth"
+          });
+        }, 100); // Small delay to ensure rendering
+      }
+    } else {
+      window.scrollTo(0, 0);
+    }
+
     const handleScroll = () => {
       const reveals = document.querySelectorAll('.reveal');
       reveals.forEach(el => {
@@ -151,11 +169,13 @@ function App() {
       {loading && <Loader onLoaded={() => setLoading(false)} />}
       <Router>
         <ScrollManager />
+        <ScrollHandler />
         {!loading && <Navbar />}
         <div id="main-page" className={!loading ? 'visible' : ''}>
           <Routes>
             <Route path="/" element={<Home />} />
             <Route path="/all-projects" element={<AllProjects />} />
+            <Route path="/project/:id" element={<ProjectDetails />} />
           </Routes>
         </div>
       </Router>

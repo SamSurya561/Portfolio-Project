@@ -70,8 +70,8 @@ const Hero = () => {
               <p>With 2+ years of experience in web development, I bring ideas to life through clean code and thoughtful design.</p>
             </div>
             <div className="info-p2">
-              <p><i className="fa-solid fa-location-dot"></i> <h4>Based in : </h4>Chennai, Tamilnadu, India.</p>
-              <p><i className="fa-solid fa-envelope"></i> <h4>Email : </h4>sharmilasharmi2128@gmail.com</p>
+              <div><i className="fa-solid fa-location-dot"></i> <h4>Based in : </h4>Chennai, Tamilnadu, India.</div>
+              <div><i className="fa-solid fa-envelope"></i> <h4>Email : </h4>sharmilasharmi2128@gmail.com</div>
             </div>
 
             <div className="btnn">

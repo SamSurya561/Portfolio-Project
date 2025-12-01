@@ -74,7 +74,7 @@ export const ScrollTimeline = ({
   const progressHeight = useTransform(smoothProgress, [0, 1], ["0%", "100%"]);
 
   useEffect(() => {
-    const unsubscribe = scrollYProgress.onChange((v) => {
+    const unsubscribe = scrollYProgress.on("change", (v) => {
       // Calculate active index based on scroll position
       const newIndex = Math.floor(v * displayEvents.length);
       if (
@@ -89,7 +89,7 @@ export const ScrollTimeline = ({
   }, [scrollYProgress, displayEvents.length, activeIndex]);
 
   return (
-    <div ref={scrollRef} className="timeline-wrapper">
+    <div ref={scrollRef} className="timeline-wrapper" style={{ position: 'relative' }}>
       <div className="timeline-header">
         <h2 className="timeline-title">{title}</h2>
         <p className="timeline-subtitle">{subtitle}</p>

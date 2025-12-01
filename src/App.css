@@ -1,4 +1,4 @@
-/* =========================================
+﻿/* =========================================
    1. COLOR VARIABLES
    ========================================= */
 :root {
@@ -1269,310 +1269,762 @@ html.dark .service-card {
   }
 }
 
-/* =========================================
-   13. MOBILE BOTTOM LIQUID NAV (GLASS DOCK)
-   ========================================= */
 
 
-/* =========================================
-   13. MOBILE BOTTOM LIQUID NAV (GLASS DOCK)
-   UPGRADED - Sliding shared pill, outline icons, polished UX
-   (Replace existing mobile-bottom-nav / glass-dock CSS with this)
-   ========================================= */
+/* -----------------------------
+   Mobile premium glass bottom sheet + hamburger
+   ----------------------------- */
 
-.mobile-bottom-nav {
-  display: none;
-  /* shown only on mobile via media query below */
+/* wrapper (top-level) */
+.mobile-bottom-nav-hamburger {
   position: fixed;
-  bottom: 20px;
-  left: 50%;
-  transform: translateX(-50%);
-  z-index: 5000;
-  width: 92%;
-  max-width: 420px;
+  inset: auto 0 0 0;
+  z-index: 10000;
   pointer-events: none;
-  /* allow clicks through margins */
 }
 
-/* glass dock container */
-.glass-dock {
-  pointer-events: auto;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  gap: 6px;
-  padding: 10px 16px;
-  background: rgba(255, 255, 255, 0.20);
-  /* subtle glass */
-  backdrop-filter: blur(16px) saturate(150%);
-  -webkit-backdrop-filter: blur(16px) saturate(150%);
-  border-radius: 58px;
-  border: 1px solid rgba(255, 255, 255, 0.35);
-  box-shadow: 0 14px 40px rgba(10, 20, 30, 0.12);
-  position: relative;
-  overflow: visible;
-}
-
-/* dark glass */
-html.dark .glass-dock {
-  background: rgba(0, 0, 0, 0.22);
-  border: 1px solid rgba(255, 255, 255, 0.07);
-  box-shadow: 0 14px 40px rgba(0, 0, 0, 0.6);
-}
-
-/* nav items layout */
-.dock-item {
-  position: relative;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 6px;
-  flex: 1 1 auto;
-  padding: 6px 6px;
-  text-decoration: none;
+/* floating hamburger button */
+.hamburger-btn {
+  position: fixed;
+  top: 24px;
+  right: 24px;
+  z-index: 10011;
+  width: 46px;
+  height: 46px;
+  display: inline-grid;
+  place-items: center;
+  border-radius: 12px;
+  background: rgba(255, 255, 255, 0.96);
+  border: 1px solid rgba(0, 0, 0, 0.06);
+  box-shadow: 0 8px 24px rgba(10, 20, 30, 0.08);
   cursor: pointer;
-  color: var(--text-lighter);
-  transition: color .18s ease, transform .22s cubic-bezier(.2, .9, .25, 1), opacity .2s ease;
-  user-select: none;
-}
-
-/* theme item (rightmost) */
-.theme-item {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  padding-left: 8px;
-  margin-left: 6px;
-  border-left: 1px solid rgba(128, 128, 128, 0.12);
-  max-width: 48px;
-}
-
-/* icon container */
-.icon-container {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 20px;
-  line-height: 1;
-  transition: transform .28s cubic-bezier(.2, .9, .25, 1), color .18s ease, opacity .18s ease;
-  z-index: 6;
-}
-
-/* label baseline */
-.dock-label {
-  font-size: 11px;
-  font-weight: 600;
-  opacity: 0.0;
-  /* hidden by default — will show for active or focus */
-  transform: translateY(6px) scale(.96);
-  transition: opacity .22s ease, transform .22s cubic-bezier(.2, .9, .25, 1), font-size .18s ease;
-  white-space: nowrap;
-  pointer-events: none;
+  pointer-events: auto !important;
+  transition: transform 260ms cubic-bezier(.2, .9, .3, 1), background 200ms ease, width 420ms cubic-bezier(.22, 1, .36, 1);
+  -webkit-tap-highlight-color: transparent;
   color: var(--text);
-  z-index: 6;
+  /* keep original compact layout when closed */
+  padding: 0;
+  text-align: center;
+  align-items: center;
 }
 
-/* outline SVGs: use currentColor for stroke */
-.icon-container svg,
-.dock-item svg {
-  width: 20px;
-  height: 20px;
-  fill: none !important;
-  stroke: currentColor !important;
-  stroke-width: 1.6 !important;
-  stroke-linecap: round !important;
-  stroke-linejoin: round !important;
-  transition: color .18s ease, transform .18s ease, stroke .18s ease;
-  display: block;
+/* dark mode button */
+html.dark .hamburger-btn {
+  background: rgba(0, 0, 0, 0.56);
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.55);
 }
 
-/* inactive visuals (muted & small) */
-.dock-item:not(.active) .icon-container {
-  transform: translateY(0) scale(.90);
-  opacity: 0.75;
-}
-
-.dock-item:not(.active) .dock-label {
-  opacity: 0;
-}
-
-/* accessibility: show label on focus even if not active */
-.dock-item:focus-within .dock-label,
-.dock-item:focus .dock-label {
-  opacity: 1;
-  transform: translateY(0) scale(1);
-  color: var(--text);
-}
-
-/* active item: color overrides (icon + label) - actual pill provides background contrast */
-.dock-item.active {
-  transform: translateY(-2px);
-  z-index: 12;
-}
-
-/* active icon + label styles */
-.dock-item.active .icon-container {
-  transform: translateY(-2px) scale(1.16);
-  opacity: 1;
-}
-
-.dock-item.active .dock-label {
-  opacity: 1;
-  transform: translateY(0) scale(1);
-  font-size: 13px;
-  color: var(--bg);
-  /* label will be color matched to background so it contrasts on pill */
-}
-
-/* ensure inline internals of SVGs inherit currentColor */
-.ul-list li svg path,
-.ul-list li svg circle,
-.ul-list li svg rect,
-.icon-container svg path,
-.icon-container svg circle,
-.icon-container svg rect {
-  fill: none !important;
-  stroke: currentColor !important;
-}
-
-/* ---------- SHARED PILL (created by JS) ---------- */
-/* the .active-pill element is injected into .glass-dock by JS */
-/* ---------- Dynamic Island style pill (replace existing .active-pill block) ---------- */
-/* ---------- Dynamic Island style pill (updated/improved) ---------- */
-
-
-.active-pill {
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%) scaleX(1);
-  transform-origin: center;
-  z-index: 2;
-  pointer-events: none;
-  display: block;
-
-  height: 38px;
-  min-width: 54px;
-  padding: 0 16px;
+/* morph when open */
+.hamburger-btn.open {
+  width: 110px;
   border-radius: 999px;
-  background: var(--border);
-  box-shadow: 0 14px 38px rgba(8, 18, 24, 0.32);
-
-  /* DO NOT animate width; animate left + transform only */
-  transition:
-    left .50s cubic-bezier(.22, 1, .36, 1),
-    transform .45s cubic-bezier(.22, 1, .36, 1),
-    background-color .18s ease,
-    box-shadow .25s ease,
-    border-radius .35s cubic-bezier(.22, 1, .36, 1);
-  will-change: left, transform, border-radius;
-  overflow: hidden;
 }
 
-.active-pill::after {
+/* hamburger icon */
+.hamburger-icon,
+.hamburger-icon::before,
+.hamburger-icon::after {
+  display: block;
+  width: 20px;
+  height: 2px;
+  background: currentColor;
+  border-radius: 2px;
+  transition: transform 260ms cubic-bezier(.2, .9, .3, 1), opacity 200ms ease;
+  color: var(--text);
+}
+
+.hamburger-icon {
+  position: relative;
+}
+
+.hamburger-icon::before,
+.hamburger-icon::after {
   content: "";
   position: absolute;
+  left: 0;
+}
+
+.hamburger-icon::before {
+  top: -6px;
+}
+
+.hamburger-icon::after {
+  top: 6px;
+}
+
+/* open -> cross */
+.hamburger-icon.open {
+  background: transparent;
+}
+
+.hamburger-icon.open::before {
+  transform: translateY(6px) rotate(45deg);
+}
+
+.hamburger-icon.open::after {
+  transform: translateY(-6px) rotate(-45deg);
+}
+
+/* overlay */
+.mobile-menu-overlay {
+  position: fixed;
   inset: 0;
-  border-radius: inherit;
-  background: linear-gradient(180deg, rgba(255, 255, 255, 0.06), rgba(255, 255, 255, 0.02));
-  mix-blend-mode: overlay;
+  background: rgba(6, 8, 10, 0.0);
   pointer-events: none;
-  opacity: 0.9;
+  opacity: 0;
+  transition: background 280ms ease, opacity 260ms ease;
+  z-index: 10005;
 }
 
-/* pop uses transform */
-.active-pill.pop {
-  animation: pillMorphTransform .52s cubic-bezier(.22, 1, .36, 1) both;
+.mobile-menu-overlay.open {
+  pointer-events: auto;
+  background: rgba(6, 8, 10, 0.36);
+  opacity: 1;
 }
 
-@keyframes pillMorphTransform {
+/* panel base */
+.mobile-menu-panel {
+  position: fixed;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  transform: translateY(110%);
+  transition: transform 420ms cubic-bezier(.22, 1, .36, 1);
+  z-index: 10010;
+  pointer-events: none;
+  will-change: transform;
+}
+
+/* inner glass */
+.mobile-menu-inner {
+  max-width: 720px;
+  margin: 0 auto;
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.98), rgba(255, 255, 255, 0.96));
+  border-radius: 16px 16px 0 0;
+  box-shadow: 0 -12px 50px rgba(10, 20, 30, 0.12);
+  padding: 18px 16px 28px;
+  pointer-events: auto;
+  backdrop-filter: blur(18px) saturate(140%);
+  -webkit-backdrop-filter: blur(18px) saturate(140%);
+  border: 1px solid rgba(255, 255, 255, 0.5);
+}
+
+/* dark variant */
+html.dark .mobile-menu-inner {
+  background: linear-gradient(180deg, rgba(8, 8, 8, 0.92), rgba(8, 8, 8, 0.86));
+  box-shadow: 0 -12px 50px rgba(0, 0, 0, 0.55);
+  border: 1px solid rgba(255, 255, 255, 0.06);
+}
+
+/* open state */
+.mobile-menu-panel.open {
+  transform: translateY(0%);
+  pointer-events: auto;
+}
+
+/* peek bounce class -> small vertical nudge */
+.mobile-menu-panel.peek {
+  animation: panelPeek .52s cubic-bezier(.22, 1, .36, 1) both;
+}
+
+@keyframes panelPeek {
   0% {
-    transform: translate(-50%, -50%) scaleX(1) scaleY(1);
-    border-radius: 999px;
-    box-shadow: 0 14px 38px rgba(8, 18, 24, 0.32);
+    transform: translateY(110%);
   }
 
-  22% {
-    transform: translate(-50%, -50%) scaleX(1.22) scaleY(.92);
-    border-radius: 48px;
-    box-shadow: 0 18px 48px rgba(8, 18, 24, 0.36);
+  20% {
+    transform: translateY(-6px);
   }
 
-  55% {
-    transform: translate(-50%, -50%) scaleX(.92) scaleY(1.06);
-    border-radius: 46px;
-    box-shadow: 0 12px 30px rgba(8, 18, 24, 0.28);
+  45% {
+    transform: translateY(8px);
+  }
+
+  70% {
+    transform: translateY(0px);
   }
 
   100% {
-    transform: translate(-50%, -50%) scaleX(1) scaleY(1);
-    border-radius: 999px;
-    box-shadow: 0 14px 38px rgba(8, 18, 24, 0.32);
+    transform: translateY(0);
   }
 }
 
-html.dark .active-pill {
-  background: var(--border);
-  box-shadow: 0 12px 32px rgba(0, 0, 0, 0.6);
+/* drag handle */
+.menu-drag-handle {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 6px 0;
 }
 
+.handle-bar {
+  width: 46px;
+  height: 6px;
+  border-radius: 99px;
+  background: linear-gradient(90deg, rgba(0, 0, 0, 0.08), rgba(0, 0, 0, 0.04));
+  box-shadow: 0 3px 10px rgba(10, 10, 10, 0.04);
+}
+
+/* quick close button */
+.quick-close {
+  background: transparent;
+  border: none;
+  display: inline-grid;
+  place-items: center;
+  padding: 6px;
+  border-radius: 8px;
+  cursor: pointer;
+  color: var(--text);
+}
+
+/* search wrapper */
+.mobile-search-wrapper {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+  padding: 10px 12px;
+  border-radius: 12px;
+  background: rgba(0, 0, 0, 0.02);
+  border: 1px solid rgba(0, 0, 0, 0.03);
+}
+
+.mobile-search-wrapper svg {
+  opacity: .7;
+}
+
+.mobile-search-input {
+  flex: 1;
+  border: none;
+  background: transparent;
+  outline: none;
+  font-size: 14px;
+  color: var(--text);
+  padding: 6px 0;
+}
+
+.mobile-search-clear {
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  font-weight: 700;
+  color: var(--text-lighter);
+}
+
+/* menu grid */
+.mobile-menu-list {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 10px;
+  margin-top: 12px;
+  margin-bottom: 14px;
+}
+
+/* ===========================
+   MOBILE: Project search result rows
+   Paste after mobile menu styles (near .mobile-search-wrapper / .mobile-menu-list)
+   =========================== */
+
+.mobile-project-item {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+  padding: 8px 14px;
+  width: 100%;
+  border-radius: 12px;
+  background: transparent;
+  border: 1px solid transparent;
+  transition: background 180ms ease, transform 160ms cubic-bezier(.2, .9, .25, 1), box-shadow 180ms ease;
+  text-align: left;
+  cursor: pointer;
+  color: var(--text);
+  margin: 6px 12px;
+  box-sizing: border-box;
+}
+
+.mobile-project-item:focus,
+.mobile-project-item:hover {
+  background: rgba(255, 255, 255, 0.035);
+  transform: translateY(-2px);
+  box-shadow: 0 8px 20px rgba(8, 12, 20, 0.06);
+  outline: none;
+}
+
+/* Thumbnail container */
+.mobile-project-thumb {
+  flex: 0 0 72px;
+  height: 48px;
+  border-radius: 8px;
+  overflow: hidden;
+  display: inline-block;
+  background: linear-gradient(180deg, rgba(0, 0, 0, 0.03), rgba(0, 0, 0, 0.06));
+  border: 1px solid rgba(0, 0, 0, 0.04);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+}
+
+.mobile-project-thumb img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+/* Meta block to the right of thumb */
+.mobile-project-meta {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  min-width: 0;
+  /* allow truncation */
+}
+
+/* Title & subtitle */
+.mobile-project-title {
+  font-size: 14px;
+  font-weight: 700;
+  color: var(--text);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: calc(100% - 20px);
+}
+
+.mobile-project-sub {
+  font-size: 12px;
+  color: var(--text-lighter);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: calc(100% - 20px);
+}
+
+/* If you want a tiny tag row under subtitle (optional) */
+.mobile-project-tags {
+  display: flex;
+  gap: 6px;
+  align-items: center;
+  margin-top: 4px;
+}
+
+.mobile-project-tag {
+  font-size: 11px;
+  padding: 4px 8px;
+  border-radius: 999px;
+  background: rgba(0, 0, 0, 0.06);
+  color: var(--text);
+}
+
+/* make results visually distinct inside dark mode */
+html.dark .mobile-project-item:hover {
+  background: rgba(255, 255, 255, 0.02);
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.55);
+}
+
+html.dark .mobile-project-thumb {
+  border: 1px solid rgba(255, 255, 255, 0.04);
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.02), rgba(255, 255, 255, 0.01));
+}
+
+/* Compact layout for very small screens */
+@media (max-width: 360px) {
+  .mobile-project-thumb {
+    flex-basis: 62px;
+    height: 44px;
+  }
+
+  .mobile-project-title {
+    font-size: 13px;
+  }
+
+  .mobile-project-sub {
+    font-size: 11px;
+  }
+
+  .mobile-project-item {
+    padding: 6px 12px;
+    margin: 6px 10px;
+  }
+}
+
+/* -------------------------
+   Mobile menu: visible active row (light + dark)
+   Paste after your .mobile-menu-item rules
+   ------------------------- */
+
+.mobile-menu-item.active {
+  /* Strong, contrasted pill behind the active row */
+  background: rgba(0, 0, 0, 0.90);
+  /* dark pill for light mode */
+  color: #ffffff;
+  /* label + icon color */
+  box-shadow: 0 10px 20px rgba(8, 12, 20, 0.18);
+  transform: translateY(-1px);
+  border-radius: 12px;
+}
+
+/* make sure inner elements inherit color */
+.mobile-menu-item.active .mobile-text,
+.mobile-menu-item.active .mobile-icon,
+.mobile-menu-item.active svg {
+  color: inherit !important;
+  stroke: currentColor !important;
+  fill: none !important;
+}
+
+/* accessible focus style */
+.mobile-menu-item:focus-visible {
+  outline: 3px solid rgba(84, 105, 255, 0.18);
+  outline-offset: 4px;
+  border-radius: 12px;
+}
+
+/* Dark mode: invert so the active pill is light and text is dark */
+html.dark .mobile-menu-item.active {
+  background: rgba(255, 255, 255, 0.12);
+  /* subtle light pill in dark mode */
+  color: var(--bg);
+  /* var(--bg) = #000 in dark mode => dark text */
+  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.5);
+}
+
+/* Slight padding tweak so the pill doesn't overlap edges */
+.mobile-menu-item,
+.mobile-menu-item .mobile-text {
+  padding-left: 14px;
+  padding-right: 14px;
+}
+
+/* ensure the quick-close / top bar doesn't hide the active item (z-index) */
+.mobile-menu-panel .mobile-menu-inner {
+  position: relative;
+  z-index: 2;
+}
+
+/* ===== Strong, cross-theme active row for mobile menu ===== */
+/* Paste after other .mobile-menu-* rules */
+
+.mobile-menu-panel .mobile-menu-item.active {
+  /* Use accent in light mode for clear contrast; force with !important */
+  background: var(--accent) !important;
+  color: #ffffff !important;
+  border-radius: 12px !important;
+  padding-left: 14px !important;
+  padding-right: 14px !important;
+  box-shadow: 0 10px 26px rgba(20, 24, 40, 0.24) !important;
+  transform: translateY(-1px);
+  transition: background .18s ease, transform .18s cubic-bezier(.22, 1, .36, 1);
+}
+
+/* Make sure icon/text and inline svgs follow the color */
+.mobile-menu-panel .mobile-menu-item.active .mobile-text,
+.mobile-menu-panel .mobile-menu-item.active .mobile-icon,
+.mobile-menu-panel .mobile-menu-item.active svg,
+.mobile-menu-panel .mobile-menu-item.active .mobile-icon svg {
+  color: inherit !important;
+  stroke: currentColor !important;
+  fill: none !important;
+}
+
+/* If your accent is too light in dark mode, fall back to a translucent light pill */
+html.dark .mobile-menu-panel .mobile-menu-item.active {
+  background: var(--accent) !important;
+  color: #ffffff !important;
+  /* keeps text visible on translucent light pill */
+  box-shadow: 0 10px 28px rgba(0, 0, 0, 0.6) !important;
+  border: 1px solid rgba(255, 255, 255, 0.04) !important;
+}
+
+/* If you prefer dark pill in dark-mode with dark text, uncomment the block below
+   and comment the block above. Use only one of the dark-mode blocks. */
+/*
+html.dark .mobile-menu-panel .mobile-menu-item.active {
+  background: rgba(0,0,0,0.64) !important;
+  color: #ffffff !important;
+  box-shadow: 0 10px 28px rgba(0,0,0,0.6) !important;
+  border: 1px solid rgba(255,255,255,0.03) !important;
+}
+*/
+
+/* Ensure focus and keyboard visibility */
+.mobile-menu-panel .mobile-menu-item:focus-visible {
+  outline: 3px solid rgba(84, 105, 255, 0.18);
+  outline-offset: 4px;
+  border-radius: 12px;
+}
+
+/* Prevent parent panel chrome from overlapping rows */
+.mobile-menu-panel .mobile-menu-inner {
+  position: relative;
+  z-index: 2;
+}
+
+/* Slight spacing so item content doesn't hug edges */
+.mobile-menu-panel .mobile-menu-item {
+  padding-top: 12px;
+  padding-bottom: 12px;
+}
+
+/* Tiny fallback in case some other selector resets svg stroke */
+.mobile-menu-panel .mobile-menu-item svg {
+  stroke: currentColor !important;
+  fill: none !important;
+}
+
+
+/* item */
+.mobile-menu-item {
+  display: flex;
+  gap: 12px;
+  align-items: center;
+  padding: 12px 14px;
+  border-radius: 12px;
+  background: transparent;
+  border: none;
+  width: 100%;
+  text-align: left;
+  cursor: pointer;
+  transition: background 220ms ease, transform 260ms cubic-bezier(.2, .9, .3, 1), box-shadow 220ms ease;
+  color: var(--text);
+  font-weight: 700;
+  pointer-events: auto;
+}
+
+.mobile-menu-item:hover {
+  transform: translateY(-4px);
+  background: rgba(0, 0, 0, 0.02);
+}
+
+.mobile-menu-item.active {
+  background: var(--border);
+  color: var(--bg);
+  box-shadow: 0 10px 30px rgba(8, 18, 24, 0.12);
+}
+
+.mobile-icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 28px;
+}
+
+.mobile-text {
+  font-size: 15px;
+}
+
+/* footer */
+.mobile-menu-footer {
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  gap: 10px;
+  padding-top: 8px;
+  border-top: 1px solid rgba(0, 0, 0, 0.04);
+}
+
+/* prevent page shift when menu open */
+body.menu-open {
+  overflow: hidden !important;
+  touch-action: none;
+}
+
+/* reduced motion respect */
 @media (prefers-reduced-motion: reduce) {
 
-  .active-pill,
-  .active-pill.pop {
+  .mobile-menu-panel,
+  .mobile-menu-overlay,
+  .hamburger-icon,
+  .mobile-menu-item {
     transition: none !important;
     animation: none !important;
   }
 }
 
-/* Shadow subtlety when item is 'pressed' */
-.dock-item:active~.active-pill,
-.dock-item.active~.active-pill {
-  transform: translate(-50%, -50%) scale(1.02);
-}
-
-/* responsive tweak: smaller pill on very small screens */
-@media (max-width: 420px) {
-  .active-pill {
-    height: 34px;
-    padding: 0 12px;
-  }
-
-  .glass-dock {
-    padding: 8px 12px;
-    border-radius: 48px;
-  }
-
-  .dock-label {
-    font-size: 11px;
-  }
-
-  .dock-item.active .dock-label {
-    font-size: 12px;
-  }
-
-  .icon-container svg {
-    width: 18px;
-    height: 18px;
+/* responsive: single column on very small widths */
+@media (max-width: 380px) {
+  .mobile-menu-list {
+    grid-template-columns: 1fr;
+    gap: 8px;
   }
 }
 
-/* show mobile nav only on narrow screens */
+/* hide desktop hamburger on desktop */
+@media (min-width: 901px) {
+  .mobile-bottom-nav-hamburger {
+    display: none !important;
+  }
+
+  .hamburger-btn {
+    display: none;
+  }
+}
+
+
+
+
+/* ===== Timeline specific styles (append to App.css) ===== */
+.timeline-section {
+  padding: 60px 0;
+}
+
+.timeline-container {
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: 0 16px;
+}
+
+/* cards */
+.timeline-card {
+  border-radius: 12px;
+  background: var(--card-bg);
+  border: 2px solid rgba(0, 0, 0, 0.115);
+  box-shadow: 0 6px 22px rgba(16, 24, 40, 0.06);
+  padding: 10px;
+}
+
+/* center connector line */
+.timeline-connector {
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 6px;
+  background: #eee;
+  border-radius: 9999px;
+  top: 0;
+  bottom: 0;
+}
+
+/* marker (dot) */
+.timeline-marker {
+  width: 28px;
+  height: 28px;
+  border-radius: 9999px;
+  background: white;
+  border: 4px solid #f1f5f9;
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.06);
+}
+
+/* responsive: stack cards on small screens */
 @media (max-width: 900px) {
-  .mobile-bottom-nav {
-    display: block;
+
+  .timeline-card,
+  .timeline-card .card-content {
+    width: 100% !important;
+    margin: 12px 0 !important;
+  }
+
+  /* keep the central axis visible but slightly thinner on mobile */
+  .timeline-connector {
+    left: 50%;
+    width: 4px;
   }
 }
 
-/* QUICK HIDES: remove any old global bubbles leftover */
-.fluid-bubble,
-.floating-bubble,
-.global-bubble,
-.pill,
-.bubble {
-  display: none !important;
+/* ===========================
+   FIX â€” MOBILE MENU POSITION
+   =========================== */
+
+/* Prevent page from shifting when menu opens */
+body.menu-open {
+  overflow: hidden !important;
 }
 
+/* Completely detach the panel from page flow */
+.mobile-menu-panel {
+  position: fixed !important;
+  left: 0 !important;
+  right: 0 !important;
+  bottom: 0 !important;
+  top: auto !important;
+  height: auto !important;
+  max-height: 88vh !important;
+  /* prevent covering whole page */
+  transform: translateY(110%) !important;
+  pointer-events: none;
+  z-index: 9999 !important;
+}
+
+/* When open, full slide-up */
+.mobile-menu-panel.open {
+  transform: translateY(0%) !important;
+  pointer-events: auto;
+}
+
+/* Fix overlay covering too much */
+.mobile-menu-overlay {
+  position: fixed !important;
+  inset: 0 !important;
+  z-index: 9990 !important;
+}
+
+/* Fix menu inner spacing */
+.mobile-menu-inner {
+  padding-top: 22px !important;
+  padding-bottom: 28px !important;
+}
+
+/* Ensure menu is ABOVE the page content */
+.mobile-bottom-nav-hamburger {
+  z-index: 10000 !important;
+  pointer-events: none;
+}
+
+.mobile-menu-item:hover {
+  transform: translateY(-4px);
+  background: rgba(0, 0, 0, 0.02);
+}
+
+.mobile-menu-item.active {
+  background: var(--border);
+  color: var(--bg);
+  box-shadow: 0 10px 30px rgba(8, 18, 24, 0.12);
+}
+
+.mobile-icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 28px;
+}
+
+.mobile-text {
+  font-size: 15px;
+}
+
+/* footer */
+.mobile-menu-footer {
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  gap: 10px;
+  padding-top: 8px;
+  border-top: 1px solid rgba(0, 0, 0, 0.04);
+}
+
+/* prevent page shift when menu open */
+body.menu-open {
+  overflow: hidden !important;
+}
+
+/* reduced motion respect */
+@media (prefers-reduced-motion: reduce) {
+
+  .mobile-menu-panel,
+  .mobile-menu-overlay,
+  .hamburger-icon,
+  .mobile-menu-item {
+    transition: none !important;
+    animation: none !important;
+  }
+}
+
+/* responsive: single column on very small widths */
+@media (max-width: 380px) {
+  .mobile-menu-list {
+    grid-template-columns: 1fr;
+    gap: 8px;
+  }
+}
 
 
 
@@ -1634,4 +2086,343 @@ html.dark .active-pill {
     left: 50%;
     width: 4px;
   }
+}
+
+/* ===========================
+   FIX â€” MOBILE MENU POSITION
+   =========================== */
+
+/* Prevent page from shifting when menu opens */
+body.menu-open {
+  overflow: hidden !important;
+}
+
+/* Completely detach the panel from page flow */
+.mobile-menu-panel {
+  position: fixed !important;
+  left: 0 !important;
+  right: 0 !important;
+  bottom: 0 !important;
+  top: auto !important;
+  height: auto !important;
+  max-height: 88vh !important;
+  /* prevent covering whole page */
+  transform: translateY(110%) !important;
+  pointer-events: none;
+  z-index: 9999 !important;
+}
+
+/* When open, full slide-up */
+.mobile-menu-panel.open {
+  transform: translateY(0%) !important;
+  pointer-events: auto;
+}
+
+/* Fix overlay covering too much */
+.mobile-menu-overlay {
+  position: fixed !important;
+  inset: 0 !important;
+  z-index: 9990 !important;
+}
+
+/* Fix menu inner spacing */
+.mobile-menu-inner {
+  padding-top: 22px !important;
+  padding-bottom: 28px !important;
+}
+
+/* Ensure menu is ABOVE the page content */
+.mobile-bottom-nav-hamburger {
+  z-index: 10000 !important;
+  pointer-events: none;
+}
+
+
+/* Remove leftover old mobile nav bottom spacing */
+.mobile-bottom-nav-hamburger {
+  margin-bottom: 0 !important;
+}
+
+/* ---------- VIEW ALL PROJECTS: compact pill style ---------- */
+/* Replace any existing .project-card.view-all-card rules with this block */
+
+.project-card.view-all-card {
+  /* Make the card look like a compact pill instead of a giant circle */
+  display: flex !important;
+  align-items: center !important;
+  align-self: center !important;
+  justify-content: center !important;
+  background: var(--accent) !important;
+  /* Accent color instead of gradient */
+  color: #fff;
+  width: 240px;
+  /* pill width */
+  height: 96px;
+  /* pill height */
+  min-width: 180px;
+  border-radius: 48px;
+  /* pill shape */
+  margin: 0 auto !important;
+  /* center inside grid cell */
+  box-shadow: 0 10px 30px rgba(15, 23, 26, 0.18);
+  transition: transform .22s cubic-bezier(.2, .9, .25, 1), box-shadow .18s ease;
+  cursor: pointer;
+  border: none;
+  padding: 0;
+  text-align: center;
+  overflow: hidden;
+}
+
+/* Inner content layout */
+.project-card.view-all-card .view-all-content {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 14px;
+  padding: 12px 18px;
+  width: 100%;
+}
+
+/* Circular icon on the left */
+.project-card.view-all-card .view-all-icon {
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.12);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #fff;
+  font-size: 18px;
+  flex-shrink: 0;
+}
+
+/* Text style */
+.project-card.view-all-card .view-all-content h3 {
+  margin: 0;
+  font-size: 13px;
+  font-weight: 700;
+  letter-spacing: 0.6px;
+  text-transform: uppercase;
+  color: #fff;
+}
+
+/* Hover / focus */
+.project-card.view-all-card:hover,
+.project-card.view-all-card:focus {
+  transform: translateY(-6px);
+  box-shadow: 0 18px 42px rgba(15, 23, 26, 0.22);
+}
+
+/* Ensure it sits nicely inside your grid:
+   make the grid item behave more like other cards, not spanning extra rows */
+.project-card.view-all-card {
+  align-self: start;
+}
+
+/* Responsiveness: smaller pill on narrow screens */
+@media (max-width: 900px) {
+  .project-card.view-all-card {
+    width: 84%;
+    max-width: 320px;
+    height: 84px;
+    border-radius: 42px;
+  }
+
+  .project-card.view-all-card .view-all-icon {
+    width: 42px;
+    height: 42px;
+    font-size: 16px;
+  }
+
+  .project-card.view-all-card .view-all-content h3 {
+    font-size: 14px;
+  }
+}
+
+/* ---------------- Mobile search/project result styles (add to App.css) ---------------- */
+
+.mobile-search-wrapper {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  background: rgba(250, 250, 250, 0.8);
+  border-radius: 12px;
+  padding: 10px 12px;
+  border: 1px solid rgba(0, 0, 0, 0.06);
+  box-shadow: 0 6px 20px rgba(10, 10, 10, 0.04);
+}
+
+html.dark .mobile-search-wrapper {
+  background: rgba(18, 18, 18, 0.6);
+  border: 1px solid rgba(255, 255, 255, 0.04);
+}
+
+.mobile-search-input {
+  border: none;
+  outline: none;
+  background: transparent;
+  font-size: 15px;
+  flex: 1;
+  color: var(--text);
+  padding: 4px 2px;
+}
+
+.mobile-search-clear {
+  background: transparent;
+  border: none;
+  font-size: 14px;
+  cursor: pointer;
+  padding: 6px;
+}
+
+/* search/project list items */
+.mobile-project-item {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+  padding: 10px 14px;
+  width: 100%;
+  border: none;
+  background: transparent;
+  cursor: pointer;
+  text-align: left;
+}
+
+.mobile-project-item:hover {
+  background: rgba(0, 0, 0, 0.03);
+}
+
+html.dark .mobile-project-item:hover {
+  background: rgba(255, 255, 255, 0.02);
+}
+
+.mobile-project-thumb {
+  width: 64px;
+  height: 48px;
+  overflow: hidden;
+  border-radius: 8px;
+  background: #fff;
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.mobile-project-thumb img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+.mobile-project-meta {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.mobile-project-title {
+  font-weight: 700;
+  color: var(--text);
+  font-size: 15px;
+}
+
+.mobile-project-sub {
+  font-size: 13px;
+  color: var(--text-lighter);
+}
+
+/* mobile menu small tweaks for spacing */
+.mobile-menu-panel .mobile-menu-inner {
+  padding: 12px 14px 18px 14px;
+}
+
+/* ensure overlay and panel stacking works */
+.mobile-menu-overlay.open {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.28);
+  z-index: 9998;
+}
+
+/* panel open state */
+.mobile-menu-panel {
+  position: fixed;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  transform: translateY(100%);
+  transition: transform 320ms cubic-bezier(.22, 1, .36, 1);
+  z-index: 9999;
+  border-top-left-radius: 18px;
+  border-top-right-radius: 18px;
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  box-shadow: 0 -18px 40px rgba(10, 10, 10, 0.12);
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.9), rgba(250, 250, 250, 0.95));
+  max-height: 92vh;
+  overflow: auto;
+}
+
+html.dark .mobile-menu-panel {
+  background: linear-gradient(180deg, rgba(10, 10, 10, 0.9), rgba(20, 20, 20, 0.95));
+}
+
+/* open */
+.mobile-menu-panel.open {
+  transform: translateY(0);
+}
+
+/* drag handle */
+.menu-drag-handle {
+  padding: 10px 0;
+  display: flex;
+  justify-content: center;
+  width: 100%;
+}
+
+.menu-drag-handle .handle-bar {
+  height: 6px;
+  width: 70px;
+  border-radius: 999px;
+  background: linear-gradient(90deg, rgba(0, 0, 0, 0.06), rgba(0, 0, 0, 0.03));
+  opacity: 0.9;
+  margin: 0 auto;
+}
+
+/* quick-close button */
+.quick-close {
+  background: #fff;
+  border-radius: 999px;
+  border: none;
+  padding: 8px 10px;
+  box-shadow: 0 6px 18px rgba(10, 10, 10, 0.08);
+  cursor: pointer;
+}
+
+html.dark .quick-close {
+  background: #111;
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.45);
+}
+
+/* mobile menu item baseline */
+.mobile-menu-item {
+  display: flex;
+  gap: 12px;
+  align-items: center;
+  padding: 12px 14px;
+  background: transparent;
+  border: none;
+  width: 100%;
+  cursor: pointer;
+}
+
+.mobile-menu-item.active {
+  background: rgba(0, 0, 0, 0.05);
+  border-radius: 10px;
+}
+
+html.dark .mobile-menu-item.active {
+  background: rgba(255, 255, 255, 0.02);
 }

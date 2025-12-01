@@ -46,11 +46,11 @@ const Contact = () => {
   return (
     <section className="contact reveal" id="contact">
       <h1>CONTACT</h1>
-      <p><h1>Get in Touch with Me</h1></p>
+      <h1>Get in Touch with Me</h1>
 
       <div className="contact-content">
         <div className="contact-info">
-          <p><h3>I'm always open to discuss exciting projects and new opportunities. Let's collaborate!</h3><br></br></p>
+          <h3>I'm always open to discuss exciting projects and new opportunities. Let's collaborate!</h3><br></br>
 
           <div className="contact-details">
             <div className="contact-item"><i className="fa-solid fa-envelope"></i><span>Sharmilasharmi2128@gmail.com</span></div>
