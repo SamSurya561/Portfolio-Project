@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Seed Firestore</title>
+    <meta charset="UTF-8" />
+</head>
+
+<body>
+    <h2>Seeding Firestore… check your console</h2>
+
+    <!-- Firebase App -->
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/9.6.1/firebase-app.js";
+        import { getFirestore, collection, addDoc } from "https://www.gstatic.com/firebasejs/9.6.1/firebase-firestore.js";
+
+        // 🔥 Paste your Firebase config here
+        const firebaseConfig = {
+            apiKey: "AIzaSyA8Inqj8vqFYIxB-BGft_9hBQtb2gPcts4",
+            authDomain: "sharmila-portfolio.firebaseapp.com",
+            projectId: "sharmila-portfolio",
+            storageBucket: "sharmila-portfolio.firebasestorage.app",
+            messagingSenderId: "316701396353",
+            appId: "1:316701396353:android:6b0e0de493d8fb01292c80"
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const db = getFirestore(app);
+
+        const sampleProjects = [
+
+            {
+                "title": "SmartPay App UI",
+                "summary": "Clean, transaction-focused mobile UX for a fintech wallet with micro-interactions and accessible flows.",
+                "imageUrl": "https://images.unsplash.com/photo-1519389950473-47ba0277781c?w=1200&q=80",
+                "categories": ["UI/UX Design", "Mobile"],
+                "date": "2025-07-01",
+                "pills": ["Figma", "Microinteractions", "Accessibility"]
+            },
+            {
+                "title": "LORA Catering Brand",
+                "summary": "Full identity system for LORA catering: logo, packaging, and event-themed layouts.",
+                "imageUrl": "https://images.unsplash.com/photo-1528731708534-816fe59f90cb?w=1200&q=80",
+                "categories": ["Branding", "Graphic Design"],
+                "date": "2025-06-20",
+                "pills": ["Logo", "Packaging", "Styleguide"]
+            },
+            {
+                "title": "Relearn Education Landing",
+                "summary": "Conversion-optimized landing page for an online learning platform featuring testimonial modules and trust badges.",
+                "imageUrl": "https://images.unsplash.com/photo-1498050108023-c5249f4df085?w=1200&q=80",
+                "categories": ["UI/UX Design", "Web"],
+                "date": "2025-05-30",
+                "pills": ["HTML", "Figma", "A/B Testing"]
+            },
+            {
+                "title": "Night Bites — App Prototype",
+                "summary": "Food discovery app concept with schedule-aware recommendations and delightful onboarding.",
+                "imageUrl": "https://images.unsplash.com/photo-1524666041070-4b3f1b9f1a2d?w=1200&q=80",
+                "categories": ["UI/UX Design", "Mobile"],
+                "date": "2025-05-10",
+                "pills": ["Prototype", "UX Research", "Reels"]
+            },
+            {
+                "title": "Event Poster Series",
+                "summary": "Bold poster templates for music events with neon accents and strong typographic hierarchy.",
+                "imageUrl": "https://images.unsplash.com/photo-1506152983158-8f2bd6f1f1f9?w=1200&q=80",
+                "categories": ["Graphic Design", "Branding"],
+                "date": "2025-04-22",
+                "pills": ["Illustrator", "Print", "Typography"]
+            },
+            {
+                "title": "Aura Dashboard UI",
+                "summary": "Data-dense admin dashboard with custom charts, filters, and a minimal design system.",
+                "imageUrl": "https://images.unsplash.com/photo-1518779578993-ec3579fee39f?w=1200&q=80",
+                "categories": ["UI/UX Design", "Web"],
+                "date": "2025-03-18",
+                "pills": ["Design System", "Charts", "React"]
+            },
+            {
+                "title": "Shopify Store Visuals",
+                "summary": "Product card redesign and banner system tailored for a playful T-shirt brand with high-conversion layout.",
+                "imageUrl": "https://images.unsplash.com/photo-1520975913042-9041a0b7a5b6?w=1200&q=80",
+                "categories": ["Graphic Design", "E-commerce"],
+                "date": "2025-02-05",
+                "pills": ["Photoshop", "Landing", "Conversion"]
+            },
+            {
+                "title": "Case Study — SaaS Onboarding",
+                "summary": "End-to-end case study showcasing onboarding improvements that reduced drop-off by 27%.",
+                "imageUrl": "https://images.unsplash.com/photo-1521737604893-d14cc237f11d?w=1200&q=80",
+                "categories": ["UI/UX Design", "Case Study"],
+                "date": "2025-01-28",
+                "pills": ["Research", "UX Writing", "Analytics"]
+            },
+            {
+                "title": "Social Pack — Brand Assets",
+                "summary": "Reusable social templates and motion-ready assets for sustained brand presence across platforms.",
+                "imageUrl": "https://images.unsplash.com/photo-1503602642458-232111445657?w=1200&q=80",
+                "categories": ["Graphic Design", "Branding"],
+                "date": "2024-12-12",
+                "pills": ["Motion", "Canva", "Templates"]
+            },
+            {
+                "title": "Corporate Website",
+                "summary": "Landing page and content templates for a SaaS product focusing on clarity and conversions.",
+                "imageUrl": "https://images.unsplash.com/photo-1498050108023-c5249f4df085?w=1200&q=80",
+                "categories": ["UI/UX Design", "Branding"],
+                "date": "2025-04-02",
+                "pills": ["HTML", "CSS", "Accessibility"]
+            }
+
+
+        ];
+
+        async function seed() {
+            try {
+                const ref = collection(db, "projects");
+                for (const p of sampleProjects) {
+                    await addDoc(ref, p);
+                    console.log("Seeded:", p.title);
+                }
+                console.log("🔥 Seeding complete!");
+            } catch (err) {
+                console.error("❌ Seeding error:", err);
+            }
+        }
+
+        seed();
+    </script>
+
+</body>
+
+</html>

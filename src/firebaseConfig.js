@@ -1,3 +1,5 @@
+// firebaseConfig.js
+// Replace the values with your Firebase project credentials from the Firebase console.
 import { initializeApp } from "firebase/app";
 import { getFirestore } from "firebase/firestore";
 
