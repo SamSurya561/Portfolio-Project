@@ -2426,3 +2426,338 @@ html.dark .quick-close {
 html.dark .mobile-menu-item.active {
   background: rgba(255, 255, 255, 0.02);
 }
+
+/* ===== FILTER BAR ===== */
+.filter-bar {
+  display: flex;
+  gap: 12px;
+  justify-content: center;
+  margin-bottom: 30px;
+  flex-wrap: wrap;
+}
+
+.filter-btn {
+  background: transparent;
+  border: 2px solid var(--border);
+  color: var(--text);
+  padding: 6px 16px;
+  border-radius: 20px;
+  cursor: pointer;
+  font-weight: 600;
+  transition: .3s;
+}
+
+.filter-btn.active,
+.filter-btn:hover {
+  background: var(--accent);
+  color: #fff;
+  border-color: var(--accent);
+}
+
+/* ===== PREMIUM CARD HOVER + IMAGE ZOOM ===== */
+.premium-card {
+  overflow: hidden;
+}
+
+.premium-card .img-wrap {
+  overflow: hidden;
+  border-radius: 12px;
+}
+
+.premium-card img {
+  transition: transform 0.5s ease;
+}
+
+.premium-card:hover img {
+  transform: scale(1.1);
+}
+
+/* ===== SKELETON LOADER ===== */
+.skeleton {
+  pointer-events: none;
+  animation: pulse 1.2s infinite ease-in-out;
+}
+
+.skeleton-img {
+  width: 100%;
+  height: 220px;
+  background: #ddd;
+  border-radius: 12px;
+  margin-bottom: 12px;
+}
+
+.skeleton-line {
+  width: 90%;
+  height: 14px;
+  background: #ddd;
+  margin-bottom: 10px;
+}
+
+.skeleton-line.sm {
+  width: 60%;
+}
+
+@keyframes pulse {
+  0% {
+    opacity: .6
+  }
+
+  50% {
+    opacity: 1
+  }
+
+  100% {
+    opacity: .6
+  }
+}
+
+/* ===== CRITICAL FIX: PROJECT VISIBILITY ===== */
+
+.projects-container {
+  display: grid !important;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)) !important;
+  gap: 25px !important;
+  width: 100% !important;
+  max-width: 1100px !important;
+  margin: 0 auto !important;
+}
+
+.project-card {
+  opacity: 1 !important;
+  visibility: visible !important;
+  position: relative !important;
+  min-height: 340px;
+}
+
+/* Hover Zoom Wrapper Enforcement */
+.project-card .img-wrap {
+  width: 100%;
+  height: 220px;
+  overflow: hidden;
+  border-radius: 12px;
+}
+
+.project-card .img-wrap img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+/* ForceView safety */
+.project-card,
+.project-card * {
+  transform: none;
+}
+
+/* ===== PREMIUM PROJECTS POLISH (paste at end of globals.css) ===== */
+
+/* make project area crisp and ensure no accidental blur from other rules */
+#project,
+.projects-container,
+.project-card,
+.premium-card {
+  filter: none !important;
+  -webkit-filter: none !important;
+  backface-visibility: hidden !important;
+}
+
+/* Grid: centered, consistent gutters */
+.projects-container {
+  display: grid !important;
+  grid-template-columns: repeat(3, 1fr) !important;
+  gap: 30px !important;
+  max-width: 1200px !important;
+  margin: 26px auto 0 auto !important;
+  padding: 0 22px !important;
+  box-sizing: border-box;
+}
+
+/* Responsive: 2 columns on tablet, 1 on mobile */
+@media (max-width: 1100px) {
+  .projects-container {
+    grid-template-columns: repeat(2, 1fr) !important;
+  }
+}
+
+@media (max-width: 700px) {
+  .projects-container {
+    grid-template-columns: 1fr !important;
+    padding: 0 14px !important;
+    gap: 22px !important;
+  }
+}
+
+/* Card: consistent size, soft shadow, clean border */
+.project-card,
+.premium-card {
+  background: var(--card-bg);
+  border-radius: 14px;
+  box-shadow: 0 8px 28px rgba(12, 20, 30, 0.06);
+  transition: transform 280ms cubic-bezier(.2, .9, .25, 1), box-shadow 220ms ease, filter 220ms ease;
+  display: flex;
+  flex-direction: column;
+  min-height: 360px;
+  overflow: hidden;
+  border: 1px solid rgba(0, 0, 0, 0.04);
+}
+
+/* Slightly stronger border in dark mode */
+html.dark .project-card {
+  border: 1px solid rgba(255, 255, 255, 0.04);
+}
+
+.project-card:hover {
+  transform: translateY(-8px);
+  box-shadow: 0 20px 50px rgba(10, 18, 30, 0.12);
+}
+
+/* Image wrapper that prevents stretching, keeps sharpness */
+.project-card .img-wrap,
+.project-card img,
+.premium-card .img-wrap,
+.premium-card img {
+  width: 100%;
+  height: 220px;
+  display: block;
+  object-fit: cover;
+  object-position: center;
+  -webkit-transform: translateZ(0);
+  /* avoids blurry transforms on some browsers */
+  transform: translateZ(0);
+}
+
+/* image zoom on hover (smooth & crisp) */
+.project-card .img-wrap img {
+  transition: transform 0.6s ease;
+  will-change: transform;
+}
+
+.project-card:hover .img-wrap img {
+  transform: scale(1.08);
+}
+
+/* content area */
+.project-card>h3,
+.project-card h3 {
+  font-family: "Playfair Display", serif;
+  color: #12306f;
+  margin: 14px 18px 6px 18px;
+  font-size: 18px;
+  line-height: 1.1;
+}
+
+.project-card>p,
+.project-card p {
+  color: var(--text-lighter);
+  margin: 0 18px 14px 18px;
+  font-size: 0.95rem;
+  line-height: 1.45;
+  min-height: 48px;
+  max-height: 96px;
+  overflow: hidden;
+}
+
+/* tags row */
+.project-card .skills {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+  margin: 0 18px 16px 18px;
+}
+
+.project-card .skills a {
+  background: rgba(30, 58, 138, 0.06);
+  color: #12306f;
+  padding: 6px 10px;
+  border-radius: 999px;
+  font-size: 12px;
+  text-decoration: none;
+}
+
+/* buttons area */
+.project-card .btns {
+  display: flex;
+  gap: 12px;
+  align-items: center;
+  justify-content: flex-start;
+  margin: auto 18px 18px 18px;
+}
+
+.project-card .btn {
+  background: linear-gradient(90deg, #5b4ef5, #7a5bff);
+  color: #fff;
+  border: none;
+  padding: 10px 16px;
+  border-radius: 999px;
+  font-weight: 600;
+  cursor: pointer;
+  box-shadow: 0 6px 18px rgba(90, 60, 200, 0.12);
+  transition: transform .18s ease, box-shadow .18s ease, opacity .12s ease;
+}
+
+.project-card .btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 12px 28px rgba(90, 60, 200, 0.16);
+}
+
+/* view-all card (small pill) - keep your earlier styles but make sure dimension matches grid */
+.project-card.view-all-card {
+  display: flex !important;
+  align-items: center;
+  justify-content: center;
+  width: auto;
+  min-height: 96px;
+  height: auto;
+}
+
+/* small accessibility & crispness tweaks */
+.project-card,
+.project-card * {
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* reveal animation (subtle) */
+.project-card {
+  opacity: 0;
+  transform: translateY(8px);
+  transition: opacity .5s ease, transform .5s cubic-bezier(.2, .9, .25, 1);
+}
+
+.project-card.show {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* ===========================
+   PREMIUM HOVER ELEVATE EFFECT
+   =========================== */
+
+.project-card.premium-card {
+  transform: translateY(0);
+  transition: transform 0.3s cubic-bezier(.2, .9, .25, 1),
+    box-shadow 0.3s ease,
+    filter 0.3s ease;
+}
+
+.project-card.premium-card:hover {
+  transform: translateY(-10px);
+  box-shadow: 0 20px 55px rgba(0, 0, 0, 0.12);
+  filter: brightness(1.02);
+}
+
+/* ===========================
+   VIEW ALL PROJECTS – BUTTON CARD
+   =========================== */
+
+.view-all-card {
+  transition: transform 0.28s ease,
+    box-shadow 0.28s ease,
+    background 0.25s ease;
+}
+
+.view-all-card:hover {
+  transform: translateY(-6px);
+  box-shadow: 0 18px 40px rgba(90, 60, 200, 0.28);
+  background: rgba(110, 60, 255, 0.08);
+}
